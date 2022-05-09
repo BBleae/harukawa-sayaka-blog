@@ -155,7 +155,7 @@ params:
     opengraph:
         twitter:
             # Your Twitter username
-            site:
+            site: HarukawaSayaka
 
             # Available values: summary, summary_large_image
             card: summary_large_image
@@ -188,13 +188,13 @@ menu:
     social:
         - identifier: github
           name: GitHub
-          url: https://github.com/CaiJimmy/hugo-theme-stack
+          url: https://github.com/BBleae
           params:
               icon: brand-github
 
         - identifier: twitter
           name: Twitter
-          url: https://twitter.com
+          url: https://twitter.com/HarukawaSayaka
           params:
               icon: brand-twitter
 
