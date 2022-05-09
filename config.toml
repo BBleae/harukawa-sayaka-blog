@@ -1,4 +1,0 @@
-baseURL = 'https://baka.studio/'
-languageCode = 'zh-cn'
-title = 'My New Hugo Site'
-theme = 'hugo-theme-stack'
