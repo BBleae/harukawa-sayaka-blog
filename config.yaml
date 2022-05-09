@@ -2,16 +2,12 @@ baseurl: https://baka.studio
 languageCode: zh-cn
 theme: hugo-theme-stack
 paginate: 5
-title: Baka Studio
+title: Harukawa Sayaka
 
 languages:
-    en:
-        languageName: English
-        title: Baka Studio
-        weight: 2
     zh-cn:
         languageName: 中文
-        title: Baka Studio
+        title: Harukawa Sayaka
         weight: 1
 
 # Change it to your Disqus shortname before using
@@ -22,7 +18,7 @@ googleAnalytics:
 
 # Theme i18n support
 # Available values: ar, ca, de, el, en, es, fr, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
-DefaultContentLanguage: en
+DefaultContentLanguage: zh-cn
 
 # Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
 # This will make .Summary and .WordCount behave correctly for CJK languages.
@@ -48,12 +44,12 @@ params:
         lastUpdated: Jan 02, 2006 15:04 MST
 
     sidebar:
-        emoji: 🏳️‍⚧️
+        emoji: 🐱
         subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         avatar:
             enabled: true
-            local: true
-            src: img/avatar.png
+            local: false
+            src: https://cravatar.cn/avatar/9ad48afa59e0aa6e7cf36ae52402f57a?s=150
 
     article:
         math: false
