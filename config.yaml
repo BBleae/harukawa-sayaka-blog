@@ -37,7 +37,7 @@ params:
 
     footer:
         since: 2022
-        customText:
+        customText: <a href="https://icp.gov.moe/?keyword=20220777" target="_blank">萌ICP备20220777号</a>
 
     dateFormat:
         published: Jan 02, 2006
