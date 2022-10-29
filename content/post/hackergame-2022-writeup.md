@@ -210,6 +210,14 @@ print(session.post('http://202.38.93.111:10047/xcaptcha', data={
 
 题目里已经给了答案，输入 `\input{/flag1}` 即可
 
+### 特殊字符混入
+
+用 `\catcode` 把 `#` 和 `_` 变成普通字符就能解析了
+
+```latex
+\catcode `\#=12;\catcode `\_=12;\input{/flag2}
+```
+
 ## Flag 的痕迹
 
 在其它的 DokuWiki 站点（如 [DokuWiki 官网](https://www.dokuwiki.org/)）发现除了 revisions 页面以外，diff 页面也能显示历史版本的内容。
