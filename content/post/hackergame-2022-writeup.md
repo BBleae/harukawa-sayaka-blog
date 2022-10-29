@@ -221,8 +221,24 @@ print(session.post('http://202.38.93.111:10047/xcaptcha', data={
 
 ### 无法 AC 的题目
 
+直接读取 `./data/static.out` 并输出即 AC
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
+int main() {
+    FILE *fp = fopen("./data/static.out", "r");
+    assert(fp != NULL);
+    char buf[64] = {0};
+    while (fgets(buf, sizeof(buf), fp) != NULL) {
+        printf("%s", buf);
+    }
+    fclose(fp);
+    return 0;
+}
+```
 
 ## 线路板
 
@@ -409,7 +425,6 @@ if __name__ == '__main__':
 
 ### HS384
  -->
-
 
 ## 光与影
 
