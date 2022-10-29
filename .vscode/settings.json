@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.tpl": "html",
+    "*.drawio": "xml",
+    "*.res": "rescript",
+    ".prettierrc": "yaml",
+    "windows.h": "c",
+    "fstream": "cpp",
+    "iosfwd": "cpp"
+  }
+}
