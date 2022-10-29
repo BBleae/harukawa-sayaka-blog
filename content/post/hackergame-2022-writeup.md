@@ -405,10 +405,10 @@ if __name__ == '__main__':
     print('[+] payload saved to "payload.pt".')
 ```
 
-## 惜字如金
+<!-- ## 惜字如金
 
 ### HS384
-
+ -->
 
 
 ## 光与影
@@ -464,3 +464,14 @@ memorize 方法会被 revert 掉，所以没办法把 `n` 存储到链上， -->
 
 ## 传达不到的文件
 
+`cat /etc/init.d/rcS` 发现终端退出后会调用 `/bin/umount`
+把它改成读 flag 的脚本就行了（两个flag都可以这样读到）
+
+```sh
+/ $ rm -rf /bin/umount 
+/ $ echo "cat /chall && cat /flag2" > /bin/umount
+/ $ chmod +x /bin/umount 
+/ $ exit
+```
+
+![umount](/hackergame-2022-writeup/umount.png)
