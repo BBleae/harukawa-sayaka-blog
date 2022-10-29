@@ -498,3 +498,125 @@ memorize 方法会被 revert 掉，所以没办法把 `n` 存储到链上， -->
 ```
 
 ![umount](/hackergame-2022-writeup/umount.png)
+
+## 企鹅拼盘
+
+### 有手就行
+
+手动从 `0000` 到 `1111` 挨个试一遍
+
+### 唯快不破
+
+写个脚本自动从 `0000000000000000` 到 `1111111111111111` 挨个试一遍（在我的电脑上跑了十几分钟，还是可以接受的）：
+
+```python
+import json
+from alive_progress import alive_it
+
+
+def bits(length):
+    result = []
+    for i in range(2**length):
+      s = bin(i)[2:]
+      result.append((length - len(s)) * '0' + s)
+    return result
+
+
+class Board:
+    def __init__(self):
+        self.b = [[i * 4 + j for j in range(4)] for i in range(4)]
+
+    def _blkpos(self):
+        for i in range(4):
+            for j in range(4):
+                if self.b[i][j] == 15:
+                    return (i, j)
+
+    def reset(self):
+        for i in range(4):
+            for j in range(4):
+                self.b[i][j] = i * 4 + j
+
+    def move(self, moves):
+        for m in moves:
+            i, j = self._blkpos()
+            if m == 'L':
+                self.b[i][j] = self.b[i][j - 1]
+                self.b[i][j - 1] = 15
+            elif m == 'R':
+                self.b[i][j] = self.b[i][j + 1]
+                self.b[i][j + 1] = 15
+            elif m == 'U':
+                self.b[i][j] = self.b[i - 1][j]
+                self.b[i - 1][j] = 15
+            else:
+                self.b[i][j] = self.b[i + 1][j]
+                self.b[i + 1][j] = 15
+
+    def __bool__(self):
+        for i in range(4):
+            for j in range(4):
+                if self.b[i][j] != i * 4 + j:
+                    return True
+        return False
+
+class App:
+    def __init__(self, branches, inbits) -> None:
+        self.board = Board()
+        self.branches = branches
+        self.inbits = list(map(int, inbits))
+        self.board.reset()
+        for branch in self.branches:
+            self.board.move(branch[1] if self.inbits[branch[0]] else branch[2])
+        self.result = bool(self.board)
+    
+    def __bool__(self) -> bool:
+        return self.result
+
+
+success_flag = 0
+
+
+def chal(bitlength, obf):
+    filename = f'chals/b{bitlength}{"_obf" if obf else ""}.json'
+    with open(filename) as f:
+        branches = json.load(f)
+    global success_flag
+    success_flag = 0
+    inbits = bits(bitlength)
+    for i in alive_it(inbits):
+        try:
+            if bool(App(branches, i)):
+                print(i)
+                return True
+        except Exception as e:
+            print(e)
+    return False
+
+
+def failed():
+    print("?")
+    exit(0)
+
+
+def success(c):
+    print(bin(success_flag))
+    exit(0)
+
+
+c = int(input("\n1. 4 bits (plain)\n2. 16 bits (obfuscated)\n3. 64 bits (obfuscated)\nChoose level: "))
+if c == 1:
+    if not chal(4, False):
+        failed()
+elif c == 2:
+    if not chal(16, True):
+        failed()
+elif c == 3:
+    if not chal(64, True):
+        failed()
+else:
+    print("Need more challenges? Maybe Hackergame 2023~")
+    exit(0)
+
+success(c)
+```
