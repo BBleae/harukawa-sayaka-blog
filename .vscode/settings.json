@@ -7,5 +7,6 @@
     "windows.h": "c",
     "fstream": "cpp",
     "iosfwd": "cpp"
-  }
+  },
+  "nuxt.isNuxtApp": false
 }

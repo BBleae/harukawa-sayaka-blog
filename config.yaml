@@ -2,12 +2,12 @@ baseurl: https://baka.studio
 languageCode: zh-cn
 theme: hugo-theme-stack
 paginate: 5
-title: Harukawa Sayaka
+title: Sayaka's Blog
 
 languages:
     zh-cn:
         languageName: 中文
-        title: Harukawa Sayaka
+        title: 晴猫的博客
         weight: 1
 
 # Change it to your Disqus shortname before using
@@ -22,7 +22,7 @@ DefaultContentLanguage: zh-cn
 
 # Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
 # This will make .Summary and .WordCount behave correctly for CJK languages.
-hasCJKLanguage: false
+hasCJKLanguage: true
 
 permalinks:
     post: /p/:slug/
