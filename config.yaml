@@ -45,7 +45,7 @@ params:
 
     sidebar:
         emoji: 🐱
-        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        subtitle: Sie leuchten golden und funkeln wie ein Diamant.
         avatar:
             enabled: true
             local: false
