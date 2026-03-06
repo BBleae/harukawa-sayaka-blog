@@ -2,3 +2,4 @@
 .env.build
 hugo.exe
 /public
+.omc/
