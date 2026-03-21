@@ -45,7 +45,7 @@ params:
     sidebar:
         emoji: 🐱
         subtitle: Sie leuchten golden und funkeln wie ein Diamant.
-        avatar: https://cravatar.cn/avatar/9ad48afa59e0aa6e7cf36ae52402f57a?s=150
+        avatar: img/avatar.webp
 
     article:
         math: false
