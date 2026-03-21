@@ -3,3 +3,4 @@
 hugo.exe
 /public
 .omc/
+assets/jsconfig.json
