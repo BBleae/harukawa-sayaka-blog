@@ -10,6 +10,10 @@ links:
     description: Aki Nazuki 的个人博客
     website: https://nazuki.moe/
     image: https://nazuki.moe/favicon.png
+  - title: QiroNT/blog
+    description: 一只⑨の闲时博客
+    website: https://ntz.im/
+    image: https://ntz.im/favicon-32x32.png
 menu:
     main:
         weight: -50
