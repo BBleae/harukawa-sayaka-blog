@@ -2,6 +2,13 @@
 title: "MaiBot：一个想当群友的 AI"
 date: 2026-03-06
 draft: false
+categories:
+    - 技术
+tags:
+    - AI
+    - 开源
+    - LLM
+    - 机器人
 ---
 
 我最近在参与开发一个叫 [MaiBot](https://github.com/Mai-with-u/MaiBot) 的项目。说它是 QQ 群聊机器人，其实不太准确，因为它的设计目标不是回答问题或者执行命令。它想做的事情是潜伏在群里，像一个真人一样聊天。会学群里的黑话，会打错字，会潜水几个小时然后突然冒出来插一嘴。

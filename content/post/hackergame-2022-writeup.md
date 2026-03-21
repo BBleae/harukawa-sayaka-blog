@@ -2,6 +2,12 @@
 title: "Hackergame 2022 Writeup"
 date: 2022-10-24T17:51:31+08:00
 draft: false
+categories:
+    - 技术
+tags:
+    - CTF
+    - 安全
+    - Writeup
 ---
 
 > 第一次打 CTF（
