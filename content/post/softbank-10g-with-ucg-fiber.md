@@ -1,6 +1,6 @@
 ---
 title: "在 UCG-Fiber 上优雅地使用 SoftBank 10G"
-date: 2026-03-29
+date: 2026-03-28
 draft: false
 categories:
     - 技术
