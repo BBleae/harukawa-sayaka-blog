@@ -85,7 +85,6 @@ $ ping -I ip6tnl1 8.8.8.8        # 绑定接口
 答案很快就明确了——管理页面的 WAN 状态依然是 DOWN。**它用的是 `SO_BINDTODEVICE`。**
 
 ```mermaid
-%%{ init: { 'theme': 'dark', 'themeVariables': { 'fontSize': '13px' } } }%%
 graph TB
     subgraph method_a["方法 A: bind() + 源地址 (192.0.0.2)"]
         A1["udapi-server<br/>bind(192.0.0.2)"] --> A2["ip rule<br/>from 192.0.0.2<br/>lookup main"]
@@ -101,11 +100,6 @@ graph TB
         B2 --> B5["ip6tnl1 发出<br/>(remote = ::)"]
         B5 --> B6(("8.8.8.8<br/>❌ 不可达"))
     end
-
-    style A5 fill:#2ecc71,stroke:#27ae60,color:#fff
-    style B6 fill:#e74c3c,stroke:#c0392b,color:#fff
-    style B3 fill:#7f8c8d,stroke:#95a5a6,color:#fff
-    style B4 fill:#7f8c8d,stroke:#95a5a6,color:#fff
 ```
 
 ## 其他失败的尝试
@@ -141,7 +135,6 @@ $ ldd /usr/bin/ubios-udapi-server
 **它是动态链接的！** 这意味着 `LD_PRELOAD` 可以用。
 
 ```mermaid
-%%{ init: { 'theme': 'dark', 'themeVariables': { 'fontSize': '13px' } } }%%
 sequenceDiagram
     participant U as ubios-udapi-server
     participant H as hook_bindtodevice.so<br/>(LD_PRELOAD)
@@ -151,7 +144,7 @@ sequenceDiagram
     Note over U,K: 健康检测开始: WAN ping 8.8.8.8
 
     U->>H: setsockopt(fd, SOL_SOCKET,<br/>SO_BINDTODEVICE, "ip6tnl1")
-
+ 
     Note over H: memcmp(optval, "ip6tnl1") == 0<br/>→ 替换为 "tun4"!
 
     H->>L: setsockopt(fd, SOL_SOCKET,<br/>SO_BINDTODEVICE, "tun4")
@@ -162,7 +155,7 @@ sequenceDiagram
 
     Note over U: WAN 状态: UP ✅
 
-    rect rgb(50, 50, 70)
+    rect
         Note over U,K: 普通 setsockopt 调用 (非 ip6tnl1)
         U->>H: setsockopt(fd, level, optname, other_val)
         Note over H: 不是 ip6tnl1 → 原样透传
@@ -246,7 +239,6 @@ $ cat /proc/$(pgrep -of ubios-udapi-server)/maps | grep hook
 最终的系统架构：
 
 ```mermaid
-%%{ init: { 'theme': 'dark', 'themeVariables': { 'fontSize': '13px' } } }%%
 graph TB
     subgraph Router["UCG-Fiber"]
         BR0["br0 (LAN)<br/>192.168.1.x"]
@@ -273,12 +265,6 @@ graph TB
 
     STARLINK -. "故障时自动切换" .-> ETH4
 
-    style TUN4 fill:#2ecc71,stroke:#27ae60,color:#fff
-    style IP6TNL fill:#e74c3c,stroke:#c0392b,color:#fff
-    style HOOK fill:#f39c12,stroke:#e67e22,color:#fff
-    style UDAPI fill:#3498db,stroke:#2980b9,color:#fff
-    style REMOTE fill:#2ecc71,stroke:#27ae60,color:#fff
-    style STARLINK fill:#9b59b6,stroke:#8e44ad,color:#fff
 ```
 
 **关键组件：**
