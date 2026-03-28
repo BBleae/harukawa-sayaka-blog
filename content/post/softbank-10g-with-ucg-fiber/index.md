@@ -308,7 +308,7 @@ PORT_FORWARDS=(
 
 ## 项目地址
 
-完整的配置文件和部署脚本：[GitHub 链接]()
+完整的配置文件和部署脚本：[GitHub 链接](https://github.com/BBleae/ucg-fiber-softbank-tunnel)
 
 包括一键部署 (`./deploy.sh ucg`)、一键停止 (`tunnel-teardown.sh`)、固件更新后自动恢复 (`on_boot.d`)。
 
