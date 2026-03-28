@@ -20,7 +20,7 @@ tags:
 
 最近捡了一台UCG Fiber，它有一个完整的 Debian 系统，于是我就开始研究能不能用它来代替 SoftBank 的路由器。
 
-![UCG-Fiber 实物照片 — 紧凑的桌面型 10G 网关，正面可见 SFP+ 和 RJ45 端口](/softbank-10g-with-ucg-fiber/ucg-fiber-photo.jpg)
+![UCG-Fiber 实物照片 — 紧凑的桌面型 10G 网关，正面可见 SFP+ 和 RJ45 端口](ucg-fiber-photo.jpg)
 
 问题是：UCG-Fiber 的 UniFiOS 原生不支持 SoftBank 的 IPv4 over IPv6 方案。它支持 v6plus (MAP-E) 和 OCN バーチャルコネクト，但 SoftBank 用的是自己的 IPIP6 隧道协议——完全不在支持列表上。
 
@@ -230,7 +230,7 @@ $ cat /proc/$(pgrep -of ubios-udapi-server)/maps | grep hook
 
 然后看了一眼 UniFi Dashboard——**WAN 状态：UP** ✓
 
-![UniFi Dashboard 截图 — WAN 状态显示为 UP (绿色)，hook 生效后健康检测通过 tun4 正常工作](/softbank-10g-with-ucg-fiber/unifi-wan-up.png)
+![UniFi Dashboard 截图 — WAN 状态显示为 UP (绿色)，hook 生效后健康检测通过 tun4 正常工作](unifi-wan-up.png)
 
 而且这个方案的优雅之处在于：当 `tun4` 真的挂掉时，通过 `tun4` 的健康检测也会失败，WAN 会正确显示为 DOWN，Starlink failover 也就能正常触发了。
 

@@ -36,9 +36,9 @@ tags:
 
 5. 用搜索引擎搜索题目中的 MD5 (记得保留冒号以及带引号)，找到对应的 IP 地址，用 `nslookup` 命令查到对应的域名 `sdf.org`。
 
-    ![search-md5](/hackergame-2022-writeup/search-md5.png)
-    ![host-ip](/hackergame-2022-writeup/host-ip.png)
-    ![nslookup](/hackergame-2022-writeup/nslookup.png)
+    ![search-md5](search-md5.png)
+    ![host-ip](host-ip.png)
+    ![nslookup](nslookup.png)
 
 6. 搜索 `中国科学技术大学 网络通`，可以找到网络通的[登录页面](http://202.38.64.59/cgi-bin/ip)，下面有个[常见问题列表](https://netfee.ustc.edu.cn/faq/)，点进去发现有一段是 “中国科学技术大学校园网络运行及通信费用分担办法（2011年1月1日起实行）”
 
@@ -191,12 +191,12 @@ print(session.post('http://202.38.93.111:10047/xcaptcha', data={
 #### 酒店
 
 1. EXIF 信息里的时区是东九区，而且照片中圆形建筑上有日语，猜测照片拍摄于日本
-    ![jp-word](/hackergame-2022-writeup/jp-word.png)
+    ![jp-word](jp-word.png)
 
     搜索圆形建筑物上出现的 “zozo”、“stadium” 等字样，可以确定照片中的建筑物是位于日本千叶县千叶市美滨区的 [ZOZO海洋球场](https://www.google.com.hk/maps/place/ZOZO%E6%B5%B7%E6%B4%8B%E7%90%83%E5%9C%BA/@35.6451583,140.0308307,15z/data=!4m5!3m4!1s0x0:0x6df5d2c745778da9!8m2!3d35.6451583!4d140.0308307)，可以从地图上看到这个地点的邮政编码是 `261-0022`
 
 2. 照片 EXIF 信息的 `Camera Model Name` 字段是 `sm6115 (juice)`，搜索 “sm6115” 发现这是骁龙662处理器的代号，于是搜索 “骁龙662 小米” 的图片：
-    ![xiaomi](/hackergame-2022-writeup/xiaomi-662.png)
+    ![xiaomi](xiaomi-662.png)
 
     发现 “Redmi Note 9 4G” 这个型号的手机的相机模组和照片中窗户倒影的手机 完 全 一 致，处理器也是骁龙662。搜索这个手机型号，可以确定它的屏幕分辨率是 `2340×1080`
 
@@ -204,7 +204,7 @@ print(session.post('http://202.38.93.111:10047/xcaptcha', data={
 
 根据照片判断飞机航向
 
-![map](/hackergame-2022-writeup/map.png)
+![map](map.png)
 
 搜索照片拍摄时在东京湾上空向北飞的航班
 
@@ -503,7 +503,7 @@ memorize 方法会被 revert 掉，所以没办法把 `n` 存储到链上， -->
 / $ exit
 ```
 
-![umount](/hackergame-2022-writeup/umount.png)
+![umount](umount.png)
 
 ## 企鹅拼盘
 
