@@ -1,4 +1,14 @@
-# 在 UCG-Fiber 上优雅地使用 SoftBank 10G
+---
+title: "在 UCG-Fiber 上优雅地使用 SoftBank 10G"
+date: 2026-03-29
+draft: false
+categories:
+    - 技术
+tags:
+    - 网络
+    - 路由器
+    - UniFi
+---
 
 > SoftBank 10G 光纤 + UCG-Fiber + IPIP6 隧道 + 一个 15 行的 C shim = 完美的 WAN 状态
 >
