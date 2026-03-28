@@ -4,3 +4,4 @@ hugo.exe
 /public
 .omc/
 assets/jsconfig.json
+resources/_gen/
