@@ -155,7 +155,7 @@ sequenceDiagram
 
     Note over U: WAN 状态: UP ✅
 
-    rect
+    rect rgb(199,199,199)
         Note over U,K: 普通 setsockopt 调用 (非 ip6tnl1)
         U->>H: setsockopt(fd, level, optname, other_val)
         Note over H: 不是 ip6tnl1 → 原样透传
