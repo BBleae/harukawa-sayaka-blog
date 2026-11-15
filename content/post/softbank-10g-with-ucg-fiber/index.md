@@ -1,6 +1,7 @@
 ---
 title: "在 UCG-Fiber 上优雅地使用 SoftBank 10G"
 date: 2026-03-28
+lastmod: 2026-11-16
 draft: false
 categories:
     - 技术
@@ -13,6 +14,8 @@ tags:
 > SoftBank 10G 光纤 + UCG-Fiber + IPIP6 隧道 + 一个 15 行的 C shim = 完美的 WAN 状态
 >
 > *本文章和其背后的工作由我和 Claude Code 共同完成*
+
+> **2026-11 更新**：升级到 UniFi OS 6.0.17 之后，这套方案开始周期性丢包。现在已经换成 UniFi 自己的 IPIP WAN，LD_PRELOAD hook 也退役了。下面先保留当初的折腾过程，新方案见文末的[后续](#native-ipip)。
 
 ## 背景：10Gbps 光纤的烦恼
 
@@ -306,11 +309,96 @@ PORT_FORWARDS=(
 
 加一条端口转发只需要多写一行，两个脚本自动适配。
 
+## 后续（2026-11）：换成 UniFi 原生 IPIP {#native-ipip}
+
+### 6.0.17 之后又开始丢包
+
+把固件升级到 UniFi OS 6.0.17 之后，网络开始时不时严重丢包。排查下来是两件事叠在一起：
+
+- udapi 会定期删掉 eth4 上它不认识的 IPv6 地址，其中就包括 tun4 的源地址。
+- UniFi 认为 WAN1 不健康，于是给路由器自己发出的 IPv6 包都打上了 Starlink 的路由标记。tun4 的外层包之所以还能从 eth4 出去，全靠 watchdog 往 main 表里复制的一条默认路由。而 udapi 每次 DHCPv6 更新（约 2.85 分钟一次）都会把这条路由删掉。在 watchdog 下一轮补回来之前，外层包都从 Starlink 发了出去，当然到不了对端。每次断 0–15 秒，平均丢包 4–5%。
+
+当时打了两个补丁：把源地址钉在 `lo` 上，再给 tun4 设 fwmark、在 mangle 表放行外层包。丢包是止住了，但这像是在打地鼠。udapi 本质上是一个「对账」系统，它不认识的路由、rule、地址都会被删掉；我自己加的 `ip rule` 不到 20 秒就会被清掉。只要继续和 UniFi 对着干，下一次固件更新多半又会出问题。
+
+### UniFi 自己其实会建 IPIP 隧道
+
+回头再看 UniFi 的 WAN 设置，现在的 Network 应用（11.0.99）里，IPv4 连接方式里有一个「IPv4 over IPv6 → IPIP」，下面可以选 transix 等几家 VNE 的固定 IP 服务。
+
+SoftBank 10G 用的是 BBIX，不在列表里。不过从协议上看，固定 IP 方案都是同一回事：把 IPv4 包封装进 IPv6，发给对端的 BR；隧道的本地地址则是「委派前缀 + 运营商分配的接口 ID」。选哪家，只决定隧道参数从哪里来。所以直接选 Transix，填上接口 ID、BR 地址和固定 IPv4，在 BBIX 上实测可以用。
+
+唯一的阻碍是 Transix 选项特有的一步。udapi 把这类 WAN 交给 `ubnt-hb46pp` 处理，它会先向 transix 的固定 IP 更新接口发一次「地址更新」请求（带着用户名和密码），收到 HTTP 响应之后才继续下发隧道参数。BBIX 没有这个服务器，好在 UniFi 留了一个覆盖文件，可以把这个 URL 换掉：
+
+```bash
+# 指向任何一个必定有响应的地址即可; 用户名和密码只填占位值
+echo 'http://[2606:4700:4700::1111]/cdn-cgi/trace' \
+    > /data/udapi-config/internet_multifeed.eth4.address_update
+```
+
+### 然后是 UniFi 的 bug
+
+隧道建起来了，但不通。看了一下 `ip6tnl1`，它的本地地址是 eth4 自己的 DHCPv6 地址，而不是 hb46pp 算出来的「前缀 + 接口 ID」。正确的地址明明就写在 `/run/hb46pp/eth4.json` 里，BR 只认这个地址，其他源地址发过去的包会被丢掉。
+
+用 IDA 看了 udapi 里生成隧道本地地址的那段逻辑：它只实现了「取接口地址」这一种情况，没有用 hb46pp 给的地址。此外，hb46pp 失败一次之后就不再重试，要等 eth4 的地址变了才会再试。
+
+所以还是需要一个小守护脚本，`ipip-guard`，每 15 秒跑一次，只补这三处：
+
+1. 维护上面那个地址更新的覆盖文件；
+2. 按 hb46pp 算出的参数改正隧道的本地地址（`ip link set ip6tnl1 ... local <前缀+IID>`），并把这个地址挂到一个网卡上；
+3. 隧道迟迟没出现时，补跑一次 provisioning。
+
+### 地址挂在哪：lo 也不安全
+
+一开始我沿用了旧方案的做法，把地址挂在 `lo` 上。结果加端口转发的时候，IPv4 断了 13 秒，`dmesg` 里全是：
+
+```
+ip6_tunnel: ip6tnl1 xmit: Local address not yet configured!
+```
+
+原来 udapi 每次下发配置时，也会清理 `lo` 上它不认识的地址。UI 里改任何东西都会触发下发，地址一没，内核就拒绝从隧道发包，直到守护脚本下一轮把地址补回来。
+
+解决办法是把地址放到 udapi 根本不管的地方：一个 dummy 网卡 `ipipsrc0`。上次 dummy 接口没能骗过 UI 的 WAN 选择器，这次总算派上了用场。改完之后连续下发两次配置，路由器上每 0.2 秒一次的 ping 是 300/300，一个包都没丢。
+
+### 结果
+
+```mermaid
+graph TB
+    subgraph Router["UCG-Fiber"]
+        BR0["br0 (LAN)"]
+        ETH4["eth4 (WAN1)<br/>BBIX IPv6 IPoE"]
+        IP6TNL["ip6tnl1<br/>UniFi 原生 IPIP<br/>固定 IPv4"]
+        HB["ubnt-hb46pp<br/>算出 前缀+IID / BR / IPv4"]
+        GUARD["ipip-guard<br/>每 15 秒"]
+        DUMMY["ipipsrc0 (dummy)<br/>挂着隧道源地址"]
+    end
+
+    BR(("BR<br/>IPv4 互联网"))
+    STARLINK["Starlink<br/>WAN2 备用"]
+    LAN["内网设备"]
+
+    LAN --> BR0 --> IP6TNL
+    IP6TNL -- "IPv4-in-IPv6，经 eth4 发出" --> BR
+    ETH4 -.- IP6TNL
+    HB -. "参数" .-> GUARD
+    GUARD -. "改正 local" .-> IP6TNL
+    GUARD -. "维护地址" .-> DUMMY
+    STARLINK -. "UniFi 自带 failover" .-> BR0
+```
+
+- LD_PRELOAD hook、自建的 NAT 和端口转发规则、watchdog 里的 failover 全部退役了。WAN 状态、健康检测、Starlink failover、端口转发、hairpin 都交给 UniFi 自己处理，端口转发直接在 UI 里加。
+- 用 6 分钟的抓包测试复现原来的丢包场景：从 Starlink 漏出去的外层包是 0 个，内网 ping 1762/1762。
+- 代价是路由器重启或 udapi 重启时，udapi 还会用错误的本地地址重建隧道，守护脚本大约 25 秒内改正。
+
+### 新的经验
+
+- **别和 udapi 对着干**：它会对账删除所有它不认识的东西。要么借用它自己的机制（这次是 IPIP WAN），要么把东西放在它不管理的地方（dummy 网卡）。
+- **选项名字不对不代表不能用**：只要协议层是同一回事，别家 VNE 的选项也可以借来承载参数。
+- **测外网方向要用真正的外网**：从路由器自己经 Starlink 访问固定 IP 测不出东西，因为回包的源地址是本机地址，会被内核当作 martian 丢掉。我最后是用手机的蜂窝网络测的。
+
 ## 项目地址
 
 完整的配置文件和部署脚本：[GitHub 链接](https://github.com/BBleae/ucg-fiber-softbank-tunnel)
 
-包括一键部署 (`./deploy.sh ucg`)、一键停止 (`tunnel-teardown.sh`)、固件更新后自动恢复 (`on_boot.d`)。
+仓库根目录现在是原生 IPIP 方案：`ipip-guard`、一键部署（`./deploy.sh ucg`），以及从 tun4 切换、回滚到 tun4 的脚本。本文前半部分的 tun4 方案移到了 `legacy/` 目录，留作回滚用。
 
 ---
 
