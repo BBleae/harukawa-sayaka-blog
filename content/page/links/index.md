@@ -14,10 +14,11 @@ links:
     description: 一只⑨の闲时博客
     website: https://ntz.im/
     image: https://ntz.im/favicon-32x32.png
-  - title: 白玉楼之梦
-    description: szszss 的个人博客
-    website: http://blog.hakugyokurou.net/
-    image: http://blog.hakugyokurou.net/favicon.ico
+  # 暂时隐藏：站点目前无法访问
+  # - title: 白玉楼之梦
+  #   description: szszss 的个人博客
+  #   website: http://blog.hakugyokurou.net/
+  #   image: http://blog.hakugyokurou.net/favicon.ico
   - title: Chino Moka
     website: https://chino.dev/
     image: https://chino.dev/favicon-32x32.png

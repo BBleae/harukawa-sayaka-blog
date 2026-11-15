@@ -1,24 +1,18 @@
-baseurl: https://baka.studio
-languageCode: zh-cn
+baseURL: https://baka.studio
 theme: hugo-theme-stack
-paginate: 5
+pagination:
+    pagerSize: 5
 title: Sayaka's Blog
 
 languages:
-    zh-cn:
-        languageName: 中文
+    zh:
+        locale: zh-CN
+        label: 中文
         title: 晴猫的博客
         weight: 1
 
-# Change it to your Disqus shortname before using
-disqusShortname: hugo-theme-stack
-
-# GA Tracking ID
-googleAnalytics:
-
-# Theme i18n support
-# Available values: ar, ca, de, el, en, es, fr, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
-DefaultContentLanguage: zh-cn
+# Theme i18n support: the language key must match a file in themes/hugo-theme-stack/i18n (zh, zh-hant-tw, ja, en, ...)
+defaultContentLanguage: zh
 
 # Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
 # This will make .Summary and .WordCount behave correctly for CJK languages.

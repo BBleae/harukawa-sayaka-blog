@@ -1,0 +1,19 @@
+{{- /*
+    嵌入一个独立页面：assets/embeds/<name>/ 下的 body.html、style.css、script.js
+    用法：{{< embed-page "sessionless-architecture" >}}
+*/ -}}
+{{- $name := .Get 0 -}}
+{{- $dir := printf "embeds/%s" $name -}}
+{{- with resources.Get (printf "%s/style.css" $dir) -}}
+    {{- $css := . | minify | fingerprint -}}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{- end -}}
+{{- with resources.Get (printf "%s/body.html" $dir) -}}
+    {{- .Content | safeHTML -}}
+{{- else -}}
+    {{- errorf "embed-page: %s/body.html not found (%s)" $dir .Position -}}
+{{- end -}}
+{{- with resources.Get (printf "%s/script.js" $dir) -}}
+    {{- $js := . | minify | fingerprint -}}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{- end -}}
