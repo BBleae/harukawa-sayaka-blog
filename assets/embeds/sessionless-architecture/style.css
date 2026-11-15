@@ -75,6 +75,8 @@
 .article-content .sl .st.live i{ background:var(--ink-2) }
 .article-content .sl .st.copy i{ background:linear-gradient(90deg, var(--ink-2) 50%, transparent 50%) }
 .article-content .sl .st.ask i{ border-radius:1px; transform:rotate(45deg) scale(.86) }
+.article-content .sl .st.wip i{ background:conic-gradient(var(--ink-2) 0 90deg, transparent 90deg) }
+.article-content .sl .st.found i{ background:radial-gradient(circle, var(--ink-2) 0 30%, transparent 34%) }
 .article-content .sl .st.no i{ border-color:transparent; background:
   linear-gradient(45deg, transparent 43%, var(--ink-2) 43%, var(--ink-2) 57%, transparent 57%),
   linear-gradient(-45deg, transparent 43%, var(--ink-2) 43%, var(--ink-2) 57%, transparent 57%) }
@@ -211,6 +213,22 @@
 .article-content .sl .gbar.m{ fill:var(--main-wash); stroke:var(--main) } .article-content .sl .gbar.a{ fill:var(--aud-wash); stroke:var(--aud) } .article-content .sl .gbar.l{ fill:var(--ledger-wash); stroke:var(--ledger) }
 .article-content .sl .gbar.opt{ fill:none; stroke:var(--line-2); stroke-dasharray:5 4 }
 .article-content .sl .grid{ fill:none; stroke:var(--line); stroke-width:1 }
+.article-content .sl .frame{ fill:none; stroke:var(--ink-2); stroke-width:1.25; stroke-dasharray:9 5; opacity:.7 }
+
+/* 进展：按日期倒着排，新的加在最上面 */
+.article-content .sl .prog{ display:flex; flex-direction:column; gap:2rem }
+.article-content .sl .prog-day{ display:grid; grid-template-columns:11.2rem minmax(0,1fr); gap:0.8rem 2rem; align-items:start }
+.article-content .sl .prog-day > h3{ font:600 var(--t-sm)/1.5 var(--font-mono); color:var(--ink-2); padding-top:1.36rem; margin:0 }
+.article-content .sl .prog-list{ list-style:none; margin:0; padding:0; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); min-width:0 }
+.article-content .sl .prog-list li{ display:grid; grid-template-columns:8.96rem minmax(0,1fr); align-items:start; gap:0.64rem 1.44rem; padding:1.36rem 1.6rem; border-top:1px solid var(--line); font-size:var(--t-sm); color:var(--ink-2) }
+.article-content .sl .prog-list li:first-child{ border-top:0 }
+.article-content .sl .prog-list li strong{ color:var(--ink) }
+.article-content .sl .prog-list li > .st{ padding-top:.2em }
+@media (max-width:40rem){
+  .article-content .sl .prog-day{ grid-template-columns:minmax(0,1fr) }
+  .article-content .sl .prog-day > h3{ padding-top:0 }
+  .article-content .sl .prog-list li{ grid-template-columns:minmax(0,1fr) }
+}
 
 .article-content .sl{margin-inline:calc(var(--card-padding) * -1);padding:0 var(--card-padding) 3.2rem;border-radius:0}
 .article-content .sl .top{padding-top:2.4rem}
