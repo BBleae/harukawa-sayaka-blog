@@ -44,6 +44,7 @@
     <div class="prog-day">
       <h3>11 月 19 日</h3>
       <ul class="prog-list">
+        <li><span class="st found"><i></i>查清了</span><span><strong>完成新一轮 9 路源码调研与对抗复核（19 个仓库），确认当前架构仍是全局最优并补齐细节。</strong>逐行核查了万卷 <code>0.6.14→0.6.33</code>、DeepSeekBot（Tobs）、dsh-soul 2.2、识海、<code>chat-memory-benchmark</code> 及榜上 14 款高分记忆插件：在「一条生活时间线 + 多受众隔离 + 作者是她 + 零日志垃圾」约束下，外部插件要么跨群泄密、要么双写炸库或靠旁路模型代写毁人设，三家图记忆在聊天主检索里图遍历真实贡献均接近 0%。我们不加新插件、不引重型图库、不跑禁工具的公开榜，只把真正过硬的纯函数零件收进既有四层：无歧义相对日期代码内联换算、剥抬头+称呼消权+单双字 BM25 与 1,000 字重叠窗口摘录、五类槽位冲突防吞改口、紧急度搁置与单卡 120 字硬上限、发包前临界送达状态机、备份外单调撤回墓碑与因果连坐、状态文件粘滞读防换锚，以及「分模型加性标定 + 物理窗口安全钳位 + 全路由图片上限对齐 + 去单模型硬编码」的多模型平滑适配方案（见「吸收了什么」）。</span></li>
         <li><span class="st live"><i></i>已上线</span><span><strong>水位线第②步上线了：256k 上限与「截断只认真用量」。</strong>05:02 热加载生效、没有重启 DSH：给她这条会话设上 256k 上限，同时打开「紧急截断只认落了账的真用量」。05:03 她的下一次请求里代理已按 256k 贴出中文开头的催压，没有代写、没有截断；她当轮就自己调 compress 把活跃摘要块从 64 块整理合并到了 10 块。水位线在 P1 切真挡之前能上的三步（①→③→②）已全部上线，第④步（图可折 + 路径占位）排在 P1 真挡之后。</span></li>
         <li><span class="st live"><i></i>已上线</span><span><strong>水位线第③步上线了：中文规则包 0.2.0。</strong>03:22 在第①步跑满 3 轮后直接换上中文 fish 规则包，没有重启 DSH：催压的开头当场换成中文（工具说明等下一次本来就要的重启再换），代理确认读到新包后写了改动记录并送了 desk。这期间她自己压了一块，真实用量从 22.7 万降到了约 20.2 万（256k 的 79%）。04:08 第③步满 3 轮、第②步预检全过，接着上 256k 上限 + 截断只认真用量。</span></li>
         <li><span class="st live"><i></i>已上线</span><span><strong>水位线第①步上线了：「不代写」和「等确认」修法。</strong>03:05 在她会话的代理配置里一次打开两个开关、热加载生效，没有重启 DSH：代理不再替她代写摘要，同时大部分已折内容还在时不再误挂「等确认」记号。03:06 她下一次请求里，误挂的记号已经清掉，最近一次真实用量约 22.7 万 token，缓存命中 100%。改动记录写了，没送 desk。接下来按顺序排着第③步（中文规则包）和第②步（256k 上限 + 截断只认真用量）；你也定了一条长期要求：整套方案要适配不同模型（分桶标定水位与预算、配齐各提供方图片上限、上线脚本不绑死单一模型）。</span></li>
@@ -1366,19 +1367,19 @@
 <section id="sources">
   <div class="sec-head">
     <p class="eyebrow">吸收了什么</p>
-    <h2>从五个项目各拿了什么</h2>
-    <p class="lede">这套方案<strong>不是照搬哪一家</strong>。每个项目只取对她有用的那几样，自己重写，落到我们自己的某一步。右边的标签是落在哪个阶段（<span class="pill">W</span> 是降水位那条线）。没标状态的都是<span class="st plan"><i></i>计划中</span>。</p>
+    <h2>从各家项目里拿了什么、避开了什么</h2>
+    <p class="lede">这套方案<strong>不是照搬或拼接哪一家插件</strong>。前后两轮源码核查共看了二十多个仓库，每个项目只取真正比现有做法好的纯机制，洁净室重写后落进我们既有的四个单一负责人（桥、<code>fish-ledger</code>、<code>trillion</code> fork、<code>dsh-fish</code>）。右边的标签是落在哪个阶段（<span class="pill">W</span> 是降水位那条线）。</p>
   </div>
   <div class="cols">
     <div class="blk">
-      <h3>wanjuan（万卷）</h3>
-      <p class="note">一个 DSH 上的压缩插件。没有许可证，只借思路、自己重写并注明出处。</p>
+      <h3>wanjuan（万卷 0.6.14 → 0.6.33）</h3>
+      <p class="note">DSH 上的压缩插件，新版已补 MIT 许可证。真机踩坑进一步印证了不双写宿主压缩、不用纯乘性估算。</p>
       <ul>
-        <li><span>追加写之前先看文件尾，隔离写了一半的行；状态文件先写临时文件再改名</span><span class="pill">P0</span></li>
-        <li><span>两步做的动作（换册、重折、发送）记三方状态：我们的账、宿主实际、提供方用量；补上它缺的租约（占位锁）</span><span class="pill">P0</span></li>
-        <li><span>更正记成新修订，旧版留着；被更正的来源已折进块的，那块排进重折队列</span><span class="pill">P0</span></li>
+        <li><span>追加写之前先看文件尾，隔离写了一半的行；状态文件先写临时文件再改名 <span class="st live"><i></i>已上线</span></span><span class="pill">P0</span></li>
+        <li><span>两步做的动作（换册、重折、发送）记三方状态：我们的账、宿主实际、提供方用量；补上它缺的租约</span><span class="pill">P0 · P3</span></li>
+        <li><span>更正记成新修订，旧版留着；被更正的来源已折进块的，那块排进重折队列</span><span class="pill">P3.5 · P4</span></li>
         <li><span>缓存没命中分「正常 / 异常」两本账，只借分类表，判定自己写</span><span class="pill">P0</span></li>
-        <li><span>按会话和模型分开、用真实用量校准的字数估算，做受众组装的预算器</span><span class="pill">P2</span></li>
+        <li><span><strong>11-19 修正：</strong>废除早期纯乘性系数，改按（提供方、模型）分桶做「加性基线 + 真用量优先」标定，物理大窗口只当硬上限不自动放宽；超 7 万行数组禁展开求极值防栈溢出</span><span class="pill">W · P2 · 多模型</span></li>
         <li><span>「最后一条用户消息之前字节一个不差」写成断言，就是 <code>golden-request</code> 请求对照</span><span class="pill">换桥前</span></li>
       </ul>
     </div>
@@ -1404,11 +1405,11 @@
         <li><span>一次性重折：11-14 你批准的那批旧块已写回 <span class="st live"><i></i>已上线</span></span><span class="pill">现有</span></li>
         <li><span>受众版重折：从允许的原话重新派生给群看的版本，要你批</span><span class="pill">P2</span></li>
         <li><span>「只认字节一致的前缀」认会话，每个受众一条稳定的链（受众链）</span><span class="pill">P2</span></li>
-        <li><span>按会话的上限、「不代写」开关、文件图可折、中文催压包 <span class="st copy"><i></i>副本验过</span></span><span class="pill">W</span></li>
-        <li><span>上游修「等确认」误判的办法（#5737）原样搬进来，默认关 <span class="st copy"><i></i>副本验过</span></span><span class="pill">W</span></li>
-        <li><span>出口哈希、用量、请求编号头 <span class="st wip"><i></i>在做</span></span><span class="pill">P0</span></li>
+        <li><span>按会话的上限、「不代写」开关、截断只认真用量、中文催压包 <span class="st live"><i></i>已上线</span>（文件图可折与路径占位等 P1 真挡后开）</span><span class="pill">W</span></li>
+        <li><span>上游修「等确认」误判的办法（#5737）搬进来并已热加载打开 <span class="st live"><i></i>已上线</span></span><span class="pill">W</span></li>
+        <li><span>出口哈希、用量、请求编号头 <span class="st live"><i></i>已上线</span></span><span class="pill">P0</span></li>
         <li><span>代理接进宿主的方式，从改全局 <code>fetch</code> 往宿主正式的口子上挪（模型提供方的地址加请求头）</span><span class="pill">P0 之后</span></li>
-        <li><span>还要往 fork 里加：按受众过滤、换册时接旧册父链</span><span class="pill">P2–P5</span></li>
+        <li><span>还要往 fork 里加：按受众过滤、换册接旧册父链、多模型物理窗口安全钳位，以及剥抬头 + 称呼消权 + 单双字 BM25 + 1,000 字重叠窗口摘录</span><span class="pill">W · P2–P5</span></li>
       </ul>
     </div>
     <div class="blk">
@@ -1440,9 +1441,44 @@
         <li><span>合并时间线：把证据账、请求清单、出口哈希合成一条，只读审计</span><span class="pill">P0 之后</span></li>
       </ul>
     </div>
+    <div class="blk">
+      <h3>DeepSeekBot（Tobs，11-19 新增）</h3>
+      <p class="note">建在 DSH 插件口子上的多 Bot 团队系统（MIT）。单 Bot 内不分受众所以不迁不混装，但工程防雷很扎实。</p>
+      <ul>
+        <li><span>外部发送的 <code>in-flight</code> 状态紧贴真正发包前那一刻落盘，严格区分「确定没发出」与「结果未知」，重启先对账</span><span class="pill">P3</span></li>
+        <li><span>独立于备份目录外的单调只追加撤回墓碑账本，恢复旧备份前先取并集，并顺着 <code>derivedFrom</code> 因果链连带遮盖派生卡与待发队列</span><span class="pill">P3.5 · P4</span></li>
+        <li><span>空工具序列补 <code>startsRequestSeries</code> 防后续工具全被延迟加载；本机盘搜索结果做后置真实路径与硬链接复检；图片头绝对路径做加盐短伪名脱敏</span><span class="pill">P1 · P2</span></li>
+        <li><span>按（会话链、提供方、模型）滑动分位数被动测算缓存冷热寿命，解析限流里的重置时长区分瞬态忙与额度冷却</span><span class="pill">W · 多模型</span></li>
+      </ul>
+    </div>
+    <div class="blk">
+      <h3>记忆评测与 14 款高分插件（11-19 新增）</h3>
+      <p class="note">横评 <code>chat-memory-benchmark</code> 及榜上高分仓（dsh-dot、Neo4j、MemU、Suzu、SurfCore、dsh-world 等），只拆确定性好零件。</p>
+      <ul>
+        <li><span>无歧义中文相对日期按真实单条事件时间纯代码内联换算（如 <code>下周三（=2026-07-15）</code>），跳过引号、转述与假设，只染工具回执、事项卡与交接包</span><span class="pill">W · P2 · P4 · P5</span></li>
+        <li><span><code>search_context</code> 升级：剥信封抬头、消权高频双方称呼、单双字 BM25 + 800 字重叠窗口 1,000 字紧凑摘录，承诺追问自动做 <code>你↔我</code> 人称翻转</span><span class="pill">W · P4</span></li>
+        <li><span>事项卡五类硬槽位冲突签名防吞改口、未决矛盾双活并列、紧急度保底搁置 <code>shelved</code>（跨天字节不变）、代码卡死单卡 ≤120 字防汇报腔</span><span class="pill">P4</span></li>
+        <li><span>门表补跨 MCP 资源读取显式拒绝项；猫私聊轮单向感知别处未读计数（零正文）；旧日记合上防事后改写；主动心愿四归属防群梗串私聊</span><span class="pill">P1 · P2 · P4</span></li>
+        <li><span>私有离线评测架子：成对孪生题 <code>twin_id</code>、对照完整出站上下文的脑补二次复核、三阶段召回漏斗、<code>CANARY</code> 泄漏哨兵</span><span class="pill">工具链</span></li>
+      </ul>
+    </div>
+    <div class="blk">
+      <h3>识海（shihai）与 dsh-soul 2.2（11-19 新增）</h3>
+      <p class="note">识海五件套与现有职责重叠不装；dsh-soul 面向编码 Agent 不装。各取几处精巧机制进状态层与评测链。</p>
+      <ul>
+        <li><span><code>her_recall</code> 支持按编号展开单条全文（超 200 字安全截断并提示剩余字数，不报总省略条数防连翻）；自动展示绝不刷活跃度</span><span class="pill">dsh-fish · P4</span></li>
+        <li><span>桥状态文件用粘滞安全读（<code>readJsonSafeSticky</code>）粘住上一份合法 JSON，防杀软瞬时锁闪空提示段冲垮系统提示缓存锚；心跳带静默毫秒数抓半开连接</span><span class="pill">P2 · P5</span></li>
+        <li><span>事项卡支持到期时间与前置事项完成惰性解封，多卡超预算时按二分法确定性缩摘</span><span class="pill">P4</span></li>
+        <li><span>真模型离线回归绑定模型与推理强度指纹，带不退化对照门、有效输出后落盘盲测锁，并补入跨月潜伏题与无答案拒答率</span><span class="pill">工具链</span></li>
+      </ul>
+    </div>
   </div>
   <h3>明确不拿的</h3>
   <ul class="plain">
+    <li><strong>外部记忆插件整包安装（14 款榜单插件、识海、dsh-soul、DeepSeekBot）：</strong>单会话混流下全部存在跨受众串台泄密、双写手冲突或拆裂唯一时间线的问题，一律不装不共存。</li>
+    <li><strong>重型图数据库与旁路小模型代写：</strong>源码核查显示三家图记忆在聊天主检索里图遍历真实贡献近 0%；旁路第三人称小模型抽卡片既贵又会把对话玩笑固化成人设，还丢时序。</li>
+    <li><strong>每轮强制预塞旧话、逐日模糊叙事卡、答后二次改写与禁工具公开榜：</strong>强制预塞诱发背档案腔，模糊卡磨平精确日期（复测仅 123/714），答后改写翻倍延迟且篡改原话；2.2 公开榜禁调工具、抹杀缓存折扣，不报名。</li>
+    <li><strong>群聊自动预拉 Mem：</strong>Mem 工具已在各轮放开读写且不做受众切分，严禁接任何后台自动预检索或动态尾注提示，防被动把猫私聊带进群轮。</li>
     <li><strong>万卷：</strong>不装、不和 trillion 并用。会出现两个压缩写手，还会往她日志里写删不掉的东西。</li>
     <li><strong>万卷：</strong>95% 自动折 + 占位摘要不要。新版宿主上几乎必失败，占位摘要什么都搜不到。</li>
     <li><strong>dsh-live-compact：</strong>不当压缩后端。见到 trillion 会整个让位，她答应的话进不了卡，只省约 13%。</li>
