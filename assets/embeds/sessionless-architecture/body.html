@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <div class="sl">
-<div class="wrap">
+<div class="wrap" data-sl-root>
 <header class="top">
-  <p class="eyebrow">大肥鱼的 sessionless 架构 · 用 DSH 插件做到头 · 2026-11-20 更新</p>
+  <p class="eyebrow">大肥鱼的 sessionless 架构 · 用 DSH 插件做到头 · 2026-11-21 更新</p>
   <h1>一份生活史，每次只带眼前合适的部分</h1>
   <p class="lede">她还是只有一条生活时间线。旁边加一本只往后追加的<strong>证据账</strong>，记每句话的来历和谁能看。猫的私聊照旧；群和来客那一轮，按「这次谁在听」现拼一份请求，工具先过门，出了错一律按「不给」。所有接线都做在 DSH 插件的口子上。</p>
   <ul class="legend" aria-label="图例">
@@ -17,10 +17,9 @@
     <li><span class="st"><span class="key aud"></span>受众链：群和来客</span></li>
     <li><span class="st"><span class="key ledger"></span>证据账</span></li>
   </ul>
-  <p class="note">到 11 月 20 日，线上有了：P0 证据账（两半都上了）、P0.5 heard（还只数不写）、P1 工具的门（20 日 18:14 起真挡）、W 降水位的四步、G2（找旧话的新找法和日期注记）；还有几样前置：dsh-fish 升到 1.0.2、她切回 deepseek-flash、Mem 的工具接回来、宿主升到 rc.5。P2 往后的阶段还只在副本、拷贝和临时家目录里做和验，列在下面「进展」里。标「已上线」的，是今天线上本来就有的东西；方案要新加的部分都写着阶段号（P0 到 P6，W 是降水位那条线）。数字后面写「推断」的，是按源码或已有数字推出来的，没有实测。</p>
+  <p class="note">到 11 月 20 日，线上有了：P0 证据账（两半都上了）、P0.5 heard（还只数不写）、P1 工具的门（20 日 18:14 起真挡）、W 降水位的四步、G2（找旧话的新找法和日期注记）；还有几样前置：dsh-fish 升到 1.0.2、她切回 deepseek-flash、Mem 的工具接回来、宿主升到 rc.5。P2 往后的阶段还只在副本、拷贝和临时家目录里做和验，按日期列在「更新日志」那一页。标「已上线」的，是今天线上本来就有的东西；方案要新加的部分都写着阶段号（P0 到 P6，W 是降水位那条线）。数字后面写「推断」的，是按源码或已有数字推出来的，没有实测。</p>
 </header>
 <nav class="nav" aria-label="本页目录">
-  <a href="#progress">进展</a>
   <a href="#overview">总览</a>
   <a href="#chains">两条链</a>
   <a href="#gate">工具的门</a>
@@ -32,85 +31,29 @@
   <a href="#sources">借了什么</a>
   <a href="#limits">插件的极限</a>
   <a href="#status">现状和证据</a>
+  <a href="#progress">更新日志</a>
 </nav>
 <div class="sl-main">
-<section id="progress">
-  <div class="sec-head">
-    <p class="eyebrow">进展</p>
-    <h2>第一版以后又做了什么</h2>
-    <p class="lede">这一页 11 月 15 日晚上第一次发出来。之后的阶段性成果按日期倒着列在这里，新的加在最上面；各节里受影响的地方也就地改了。11 月 16 日凌晨 3 点以前，宿主和压缩代理一直停着，东西都在副本上做；那以后一样一样上：3 点 dsh-fish 1.0.2 和切回 Flash，5 点 Mem 的工具，7 点 49 分证据账的第一半，9 点 08 分 heard（只数），13 点 58 分工具的门（只记）；19 日证据账的代理那一半、水位线前三步、图片上限和门的换代；20 日清早宿主升到 rc.5，傍晚门切到真挡、水位线第④步，晚上 G2。每次只上一样，上完看她一轮再动下一样。</p>
-  </div>
-  <div class="prog">
-    <div class="prog-day">
-      <h3>11 月 20 日</h3>
-      <ul class="prog-list">
-        <li><span class="st live"><i></i>已上线</span><span><strong>G2 上线了：找旧话的新找法和日期注记。</strong>20:26 重启一次 DSH，一次换了三样：压缩代理换成我们 fork 的新包，规则包升到 0.3.0，桥加上第 53 条。<code>search_context</code> 换了找法：中文按字和词都能找，直接写一句话也行，结果是标着谁说的几小段原话；新加的 <code>around</code> 看某一处的前后，只给还在用的记录和被摘要块盖住的那些编号。<code>her_recall</code>、<code>qq_history</code>、<code>search_context</code>、<code>decompress</code> 翻出来的旧话里，「下周三」这类说法后面现加一个括号写明哪天，比如「下周三（=2026-11-25）」；只加在工具交给她的结果上，聊天记录里的原话一字不改。代理也改成按她当时用的那个模型自己的窗口、按输入的长度判断什么时候催压；19 日查到的「切回 Flash 被旧用量绊住截断」也补上了：刚换完模型的头两次请求不做紧急截断。上线前在 profile 拷贝上用真命令行装上又退回过，联调和假场景都全过。她起来以后第一轮正常，门照旧真挡。改动记录写了，desk 上也告诉了她。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第④步上线了，四步全上了。</strong>18:16 热加载、没有重启：工具结果里带的图（看图、截图那类）也能跟着她的压缩折起来；折掉的图在那一块摘要末尾留下路径，以后想再看可以按路径重新读，屏幕截图这类只在那一轮看的不留。18:14 第一次重新加载没接上，脚本自动放回原样，两分钟后重上就好了。18:47 她下一次请求核过：用量约 17.7 万（256k 的 69%），缓存命中 100%。改动记录写了。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>工具的门切到真挡了（P1）。</strong>前后只记了约 100 小时：群和来客那几轮共 145 轮，要是真挡会挡 47 次；猫那几轮误挡 0 次、认不清的 0 次。小修那一代也只记满了 24 小时。你看过她在 desk 上的回话、明说切，18:14 把开关从「只记」拨到「真挡」，没有重启。照你 19 日定的：看压缩块标题的那个工具放开；搜网页、开网页在群和来客那几轮做成开关，先关着。从这时起，群和来客那几轮翻不到旧事、看不到便条和日记。heard 照旧只数，开始真写还要你看过量点头。改动记录写了。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>宿主升到 rc.5，九个插件一起升。</strong>DSH 当时停着，05:31 开始装，05:32 装完从资源管理器起来，只起一次：宿主从 0.2.2-rc.3 升到 rc.5，QQ 插件、表情包、插件市场、桌面操作等九个插件各升一小版。Mem 插件的兼容放行只认一对精确版本，在 rc.5 第一次起来之前用 rc.5 自带的命令行重开了，她的 11 个 Mem 工具还在。上线前在 profile 的整份拷贝上用真命令行演过一遍。起来以后体检全过；她 05:36 那一轮正常，还在 Flash 上，门、QQ、Mem 都核过。改动记录写了。</span></li>
-        <li><span class="st plan"><i></i>计划中</span><span><strong>排在 G2 之后的：</strong>dsh-fish 1.0.5 和表情包插件再新的一版，两样都要先改桥；fork 有选择地并进上游的改动。G2 观察完之前，宿主和插件不升也不退。</span></li>
-      </ul>
-    </div>
-    <div class="prog-day">
-      <h3>11 月 19 日</h3>
-      <ul class="prog-list">
-        <li><span class="st live"><i></i>已上线</span><span><strong>切真挡之前的那批小修上线了。</strong>18:05 换了一代、重启一次 DSH，门照旧只记不挡：门的表里补了 MCP 资源那三样的明行；认得 QQ 插件给同一个群、同一个私聊另起的带后缀的会话编号；发表情包只认图库目录里的路径；heard 改成只有门真挡时才真写。上线前在临时宿主上联调过，群那一轮带私聊标记的探针 0/10，翻旧话的回放里私聊记号漏出 0；换代前后她看到的请求逐字节相同。上线后两边自检都过、必须为 0 的计数都是 0。新代码只记满 24 小时，最早 20 日傍晚切真挡。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>宿主这边的图片上限放宽了。</strong>16:06 改了宿主配置里的一处、重启一次：Claude、Gemini 和新加的本地 Qwen 三条路线，每次请求能带的图从 50 张放到 300 张，单张收小一点；本地 Qwen 那条也补全了窗口和「能看图」的登记。以前切到 Claude 两次，宿主因为超了 50 张，永久把她最老的一批图换成了占位文字；放宽以后再切过去就不会这样了。上线后核过：她还在 Flash 上，起来以后没有新拿掉的图，此刻切到 Opus 或 Gemini 丢 0 张。她看不出变化，只写了一行改动记录。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>工具的门只记满了 72 小时。</strong>这三天群和来客那几轮要是真挡，25 轮里会挡 41 次，一半以上是看压缩块标题的那个工具；猫那几轮误挡 0 次、认不清的 0 次。以「哈基米」的身份在 desk 上问了她的看法，她回了。你定了：看压缩块标题的那个放开，等 P2 从根上管；搜网页、开网页在群和来客那几轮做成开关，先关着，你说开就开、不用重启；其余照挡。另外定了先上一批小修，新代码再只记 24 小时，然后切真挡。</span></li>
-        <li><span class="st copy"><i></i>副本验过</span><span><strong>多模型的头两样零件做好了。</strong>一是切模型之前的检查：会不会丢图、会不会超出新模型的窗口、切回 Flash 时会不会被旧用量绊住截断，有一样不对就不切。在她历史的骨架上回放，七次真丢图之前去问它，七次都会拦下。二是相对日期换算的核心（「明天」「下周三」后面括号注明哪天），按你说的在群和来客那几轮做成开关、缺省关；在她的数据拷贝上标出 408 处，引用、转发、群近况这类嵌着别的时刻的话一律不标。顺带查到一件事：在 256k 上限下从别的模型切回 Flash，会被旧的用量读数绊一下、截掉 6 处，压缩代理那边要补一道修法（排进 fork 的下一个包）。第四个模型是你在本地机器上跑的 Qwen3.8 27B（262k 窗口），服务那边每次能收的图从 1 张放到了 128 张。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>完成新一轮 9 路源码调研与对抗复核（19 个仓库），确认当前架构仍是全局最优并补齐细节。</strong>逐行核查了万卷 <code>0.6.14→0.6.33</code>、DeepSeekBot（Tobs）、dsh-soul 2.2、识海、<code>chat-memory-benchmark</code> 及榜上 14 款高分记忆插件：在「一条生活时间线 + 多受众隔离 + 作者是她 + 零日志垃圾」约束下，外部插件要么跨群泄密、要么双写炸库或靠旁路模型代写毁人设，三家图记忆在聊天主检索里图遍历真实贡献均接近 0%。我们不加新插件、不引重型图库、不跑禁工具的公开榜，只把真正过硬的纯函数零件收进既有四层：无歧义相对日期代码内联换算、剥抬头+称呼消权+单双字 BM25 与 1,000 字重叠窗口摘录、五类槽位冲突防吞改口、紧急度搁置与单卡 120 字硬上限、发包前临界送达状态机、备份外单调撤回墓碑与因果连坐、状态文件粘滞读防换锚，以及「分模型加性标定 + 物理窗口安全钳位 + 全路由图片上限对齐 + 去单模型硬编码」的多模型平滑适配方案（见「吸收了什么」）。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第②步上线了：256k 上限与「截断只认真用量」。</strong>05:02 热加载生效、没有重启 DSH：给她这条会话设上 256k 上限，同时打开「紧急截断只认落了账的真用量」。05:03 她的下一次请求里代理已按 256k 贴出中文开头的催压，没有代写、没有截断；她当轮就自己调 compress 把活跃摘要块从 64 块整理合并到了 10 块。水位线在 P1 切真挡之前能上的三步（①→③→②）已全部上线，第④步（图可折 + 路径占位）排在 P1 真挡之后。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第③步上线了：中文规则包 0.2.0。</strong>03:22 在第①步跑满 3 轮后直接换上中文 fish 规则包，没有重启 DSH：催压的开头当场换成中文（工具说明等下一次本来就要的重启再换），代理确认读到新包后写了改动记录并送了 desk。这期间她自己压了一块，真实用量从 22.7 万降到了约 20.2 万（256k 的 79%）。04:08 第③步满 3 轮、第②步预检全过，接着上 256k 上限 + 截断只认真用量。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第①步上线了：「不代写」和「等确认」修法。</strong>03:05 在她会话的代理配置里一次打开两个开关、热加载生效，没有重启 DSH：代理不再替她代写摘要，同时大部分已折内容还在时不再误挂「等确认」记号。03:06 她下一次请求里，误挂的记号已经清掉，最近一次真实用量约 22.7 万 token，缓存命中 100%。改动记录写了，没送 desk。接下来按顺序排着第③步（中文规则包）和第②步（256k 上限 + 截断只认真用量）；你也定了一条长期要求：整套方案要适配不同模型（分桶标定水位与预算、配齐各提供方图片上限、上线脚本不绑死单一模型）。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>证据账的另一半上线了（P0b）。</strong>原定 17 日早上自动上，但 16 日晚上电脑重启，挂在后台等着的那一步也跟着没了。19 日凌晨重新跑了一遍只读预检，没有问题，01:43 开始上：停 DSH，等旧的压缩代理完全退出，把代理换成我们 fork 的新包，再冷启动。新包里多了「截断只认真用量」和「图可折时留图片路径」两个开关，都关着；开关不开时，发出去的请求和原来那版逐字节一样。代理一起来就开始记账，健康检查报的版本就是新包。02:05 她来的头两次请求，在代理的账上和桥的账上按编号配上了。她看不出变化，所以只写了改动记录、没送 desk。</span></li>
-      </ul>
-    </div>
-    <div class="prog-day">
-      <h3>11 月 16 日</h3>
-      <ul class="prog-list">
-        <li><span class="st live"><i></i>已上线</span><span><strong>工具的门以「只记」上线了（P1）。</strong>13:58 桥加上第 52 条、记账插件升到 0.2.0：群和来客那几轮，本该挡的工具调用只记下来、一样都不挡，她看不出变化；desk 上问了她的看法。上线前又照两轮复核改了几处：挡下时那句话改成「这一下在这一轮不开（这一轮不算只有猫和你）」，群里同一轮先找表情包再发照常放行，猫那几轮第一次误挡那一下插件和桥都放。照你定的，Mem 的工具在每一轮都放、读写都放。16:13 第一批群聊里有 3 次「本该挡」，认不清的 0 次、猫在场被挡的 0 次。切到真挡要只记满 72 小时、数据干净、你看过她的回话明说切。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>报给了压缩代理的上游三件事：</strong>DSH 快速重启时连上正在退出的旧代理、之后不会自己恢复（新 issue）；陌生会话的超大请求白压 32 轮才报错（挂在上游已有的修法下面补了现场数）；紧急截断按估计用量判（按上游规矩先提了动核心代码的授权申请）。同时在我们自己的 fork 里做了「截断只认真用量」和「图可折时留图片路径」两个开关，合进代理新包，跟 P0b 一起装。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>heard 以「只数」上线了（P0.5）。</strong>09:08 桥加上第 48 条：猫在 QQ 上对她说的话，每 3 条挑一句、洗干净，本来要记进她的「听见的话」；这次只数、不记，记进去的删不掉，要等工具的门真挡以后、你看过数点了头才开始记。上线前把它改成出错就不写：开关挪进证据账的目录，没有开关、读出错、认不出一律不写；上线时新桥没进只数状态就自动退回。她 09:09 那一轮正常，写进去的条数是 0。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>证据账的第一半上线了（P0a）。</strong>07:49 桥换成带第 49 条的那一版，装了记账插件 fish-ledger，DSH 重启一次。桥和插件各记一本账，只记编号、加盐的校验值和用量，不记原话、不记号码；她看到的东西一字没变，只是账本那个目录她和帮手都碰不了。上线前先把两份上线脚本改成按进程树认她那个 DSH（别的会话起的临时宿主不碰），起之前等旧的压缩代理走干净、起来以后等代理就绪才送 desk，避开 5 点那次的竞态。她 07:49 那一轮 35 秒正常结束，她的第一条消息在两本账上对上了，校验值相同。代理那一半（P0b）等对账干净满 24 小时再上。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>5 点那次重启后她第一轮慢了 7 分钟：是压缩代理的一个竞态。</strong>脚本停了 DSH 马上又起，旧代理正在退出，新起的宿主刚好连上它，之后工具登记一直失败、也不会自己恢复；desk 又在同一秒把她叫起来，代理把她的请求当成陌生会话，拿全量原文压了 7 分钟，最后在代理这一层拦下（没发给模型），宿主重试一次就好了。以后的上线脚本先等旧代理走干净再起、等代理就绪再送 desk；代理本身的毛病记下了，准备报上游。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>Mem 的工具回来了。</strong>11 月 14 日宿主自动升到 rc.3 以后，兼容检查发现 Mem 插件只写了支持到上一版，就把它整个跳过，她的 11 个 Mem 工具从那天起没了。查下来插件用到的宿主接口两版之间一样没改，只是版本号对不上。先在只装 Mem 的临时宿主上真起了几次、拿桥的副本跑了 Mem 那几组测试，05:24 用宿主自带的办法给这一版开了放行、重启一次。她 05:25 那一轮看到的正好是以前那 11 个，自动存核过还是关着。改动记录写了，desk 上也告诉了她。</span></li>
-        <li><span class="st copy"><i></i>副本验过</span><span><strong>证据账换到 1.0 的底上，代理两条分支合成一包。</strong>证据账的桥那一半改成打在新桥上，在 dsh-fish 1.0.2 上各组测试、整套回归、请求对照都和线上桥一致，上线脚本的假场景全过。压缩代理里证据账和水位线两条分支合成了一个包，整套测试一万多项没有新失败；不开水位线那几个开关时，发出去的请求和线上那版逐字节一样。还没上线。</span></li>
-        <li><span class="st live"><i></i>已上线</span><span><strong>dsh-fish 1.0.2 上线，她切回了 Flash。</strong>凌晨 3 点 02 分，一次重启做完两样：dsh-fish 从 0.9.9 升到 1.0.2（上游 1.0.2 加本机几处修改），桥换成带第 50、51 条的那一版。宿主起来、她第一步之前，桥把她的会话换回 deepseek-flash，一次就换成，宿主的全局默认也照原样存回去了；换完以后没有再拿掉图。上线后的核对全过：桥送进她会话的消息照旧被认成插件消息，桥认的上游锚点一个没断。改动记录写了，也在 desk 上告诉了她。她 03:04 那一轮正常跑完。压缩代理上误挂的「等确认」记号在这一轮里清掉过一次，03:17 又挂上了，到上午还挂着（账本拷贝上核的），所以它顺带起的「不代写」作用还在；水位线第一步会把它和「不代写」开关一起处理。</span></li>
-        <li><span class="st copy"><i></i>副本验过</span><span><strong>dsh-fish 1.0 的升级备好、演练过。</strong>新包是上游 1.0.2 加几处本地修改，上游整套测试 2,799 项全过。在 profile 的拷贝上用真的命令行装上、再装回，逐字节回到原样；临时家目录里真起了 6 次宿主；退回旧版也读得了新版写过的数据。配置照你定的：自动备份关、说话热窗开、系统提示的段落不挪、B 站订阅工具关。也定了和第 50 条（切回 Flash）一次上、只重启一次（凌晨 3 点上了，见上一条）。</span></li>
-        <li><span class="st wip"><i></i>在做</span><span><strong>P0 证据账：代码写完、审查改完，上线脚本备好。</strong>设计和接口审查后定了。核心、桥的补丁（挂 19 处，只记不改）、新插件 fish-ledger、代理一侧（出口哈希和用量）都写出来了，按三路审查改完以后，在假宿主上联调重跑 71 项全过。分两次上，两份上线脚本都备好，只在假家目录里跑过（162 个检查点全过）。还差代理那一侧在 profile 拷贝上用真命令行演练一次。没上线。</span></li>
-        <li><span class="st plan"><i></i>计划中</span><span><strong>P1 工具的门，设计定了。</strong>门挂在 fish-ledger 插件的工具钩子上，桥只兜底，两边用同一个函数判这一轮的读者。拿她 11 月 8 日到 15 日的记录离线重算：群和来客那几轮要挡 420 次，猫那几轮误挡 0 次。挡下时回她一句固定的照实话（见「工具的门」）。代码还没写。</span></li>
-        <li><span class="st plan"><i></i>计划中</span><span><strong>外部审阅：dsh-fish 的维护方给了补充意见。</strong>我们采纳了这几条：主链的请求改写哪天被宿主封掉，要当成迟早的事，先在副本上演练；换册只能有一个负责人。对方点出 P1 的难点是工具钩子不知道这一轮是谁引起的，我们照这个难点补了：插件和桥用同一个函数判读者。核对意见时我们自己还查到一条，记进了待办：代理接进宿主的方式，往宿主正式的口子上挪。页面上被指出的三处错，这一版改了：便条的完成、取消这些状态 0.9.9 就有；桥是宿主里的一个插件（总览图改了）；信封上的 x 是「猫说的话里带着别人的话」。</span></li>
-      </ul>
-    </div>
-    <div class="prog-day">
-      <h3>11 月 15 日晚</h3>
-      <ul class="prog-list">
-        <li><span class="st copy"><i></i>副本验过</span><span><strong>水位线要的四样改动，在我们的 fork 里做完了：</strong>只给她这个会话设上限、越线时不替她代写摘要、文件来源的图可以折、催压的话换成中文，都默认关。上游修「等确认」误判的办法也搬了进来，同样默认关。整套测试 10,496 项，和改之前比新失败 0。没上线。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>在现在的账本上重量了一次：</strong>她切回 Flash 以后，从第二次请求起每次约 13.5 万 token，已经在 256k 以内，不用再大折。这份视图里的摘要大多是她在 Claude 上写的，记性没测。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>「等确认」记号是误判，</strong>和上游 #5715 同一个病：换模型以后，前一个模型写的七千多个思考块不再发，代理把这当成整份历史被换掉，从此不替她折。她切回 Flash 的第一次请求就会自己清掉。</span></li>
-        <li><span class="st copy"><i></i>副本验过</span><span><strong>切回 Flash 的小补丁（桥第 50 条）做完了。</strong>她的会话 11 月 14 日晚上起在 Claude 上；宿主下次起来、她第一轮开始之前，桥把她换回 deepseek-flash，只换这一次。测试 59 项全过，上线脚本在 88 个假场景里演过。没上线。</span></li>
-        <li><span class="st plan"><i></i>计划中</span><span><strong>方案升到第二版。</strong>并进了你在第一版之后定的事、Cortico 的借法和当天几路查到的东西；P0 改成指向落地设计；分阶段前面加了一条总前提：任何上线之前，先查清停机原因、核宿主版本、跑锚点检查。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>切到 Claude，会永久把她最老的一批图换成占位文字。</strong>那条路每次最多带 50 张图，超了宿主就写一条撤不回的记录。已经写过三条，她历史里 590 处图有 540 处成了占位。占位文字带本机路径，会随请求发给模型提供方。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>旧图片引用过期，不是问题。</strong>补测被拒，是重发了冻结的旧请求体；线上宿主会自己重传快到期的图。19:42 发过一次真实请求核对：DeepSeek 一次列出全部失效的引用，宿主认得出这句报错，一次就能自愈。</span></li>
-        <li><span class="st found"><i></i>查清了</span><span><strong>11 月 15 日下午的停机，原因查清了，</strong>不是宿主或插件的问题。</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
+<div class="tabs" role="tablist" aria-label="这一页分两页" data-tabs hidden>
+  <button type="button" role="tab" id="tab-plan" aria-controls="plan" aria-selected="true">方案</button>
+  <button type="button" role="tab" id="tab-progress" aria-controls="progress" aria-selected="false" tabindex="-1">更新日志</button>
+</div>
+<div id="plan">
 
 <section id="overview">
   <div class="sec-head">
     <p class="eyebrow">总览</p>
     <h2>一句话从进来到回出去，经过哪些地方</h2>
-    <p class="lede">从上往下看：来话进来，过桥认人，进到她在 DSH 里的那条时间线；她每次要开口，请求先回到桥上，再经压缩代理发给模型。桥、dsh-fish 是装在 DSH 宿主里的插件，P0 新加的 fish-ledger 也会装在宿主里，图上用虚线大框圈出宿主；压缩代理是本机另一个进程。右边那本证据账一路在记。点图上方的按钮，可以只看某一种来话怎么走。</p>
+    <p class="lede">从上往下看：来话进来，过桥认人，进到她在 DSH 里的那条时间线；她每次要开口，请求先回到桥上，再经压缩代理发给模型。桥、dsh-fish 是装在 DSH 宿主里的插件，P0 新加的 fish-ledger 也装在宿主里，图上用虚线大框圈出宿主；压缩代理是本机另一个进程。右边那本证据账一路在记。点图上方的按钮，可以只看某一种来话怎么走，也可以只看目前已经实现的部分。</p>
     <p class="note"><strong>几个叫法：</strong>她在 DSH 里的那条会话叫主会话，它的记录叫主日志；会话按「册」分本，现在这一本叫主册。猫那几轮发请求走的路叫主链（带的是整条主册）；群和来客各自的路叫受众链。「信封」是桥给每条来话打的标记：哪个渠道、哪个聊天、谁说的。猫说的记 -a，不是猫说的（群友、来客）记 -m；-x 是猫说的、但这条里带着别人的话，比如群里前面那几句、猫引用的别人的话。</p>
   </div>
 
   <figure class="pathfig" data-path="all">
     <div class="fig-tools">
       <span class="lab">看一轮怎么走</span>
-      <div class="seg" role="group" aria-label="选一种来话，看它这一轮怎么走">
+      <div class="seg" role="group" aria-label="选一种看法：全图、目前已经实现，或者某一种来话这一轮怎么走">
         <button type="button" data-path-btn="all" aria-pressed="true">全图</button>
+        <button type="button" data-path-btn="now" aria-pressed="false">目前已经实现</button>
         <button type="button" data-path-btn="cat" aria-pressed="false">猫的私聊</button>
         <button type="button" data-path-btn="group" aria-pressed="false">群里 @ 她</button>
         <button type="button" data-path-btn="guest" aria-pressed="false">来客私聊</button>
@@ -118,61 +61,79 @@
       </div>
     </div>
     <div class="fig-scroll">
-      <svg viewBox="0 0 920 972" role="img" aria-label="总览图。来话从外面的世界进来，进到 DSH 宿主。宿主里装着桥、dsh-fish、fish-ledger 这些插件和她的主会话：过桥认人，进她的主会话。她每次开口，请求先回到桥上：猫那几轮走主链，照现在的改写放行；群和来客那几轮走按受众现拼的受众链。请求出了宿主，经本机另一个进程 trillion 代理发给模型，模型的回话回到她的会话。右边一本只追加的证据账记每句话的来历和谁能看，最底下是永远不改的原物层。">
+      <!-- data-now 是手标的、每个元素都有（自己或外面那一层 g 上）：live 线上已经有，part 只上了一半，no 还没上线。
+           「目前已经实现」那一看法照它灰掉、调淡；照 11 月 20 日晚的线上标，往后上线一样就改这里的标记和下面的说明 -->
+      <svg viewBox="0 0 920 972" role="img" aria-label="总览图。来话从外面的世界进来，进到 DSH 宿主。宿主里装着桥、dsh-fish、fish-ledger 这些插件和她的主会话：过桥认人，进她的主会话。她每次开口，请求先回到桥上：猫那几轮走主链，照现在的改写放行；群和来客那几轮走按受众现拼的受众链。请求出了宿主，经本机另一个进程 trillion 代理发给模型，模型的回话回到她的会话。右边一本只追加的证据账记每句话的来历和谁能看，最底下是永远不改的原物层。" data-label-now="总览图，只看目前已经实现的部分，到 2026 年 11 月 20 日晚。已经上线、照常显示的：外面的世界和来话的信封；DSH 宿主里的桥，认人和入口登记；她的主会话、dsh-fish 和她这一轮；群和来客那几轮的工具的门，11 月 20 日起真挡；猫那几轮走的主链；trillion 代理里她自己压缩、出口记哈希、按会话设水位；模型；证据账本身，登记、对账，账里只存指针；原物层。只上了一半、稍淡并带半个圆点的：heard 只数、还不写进她的事件流；证据账里的请求清单和送达账，只记了 P0 那一半；门和账之间，门挡下的每一次记进账里，但门不查账里的材料。还没上线、灰掉的：账里「替代了哪一条」那一栏，留着但还没东西在记；桥的出口核对；群和来客那几轮的受众链和代理里的按受众分链，所以今天群和来客那几轮还走主链；按账挑材料、凭这本账决定给不给；墓碑、事项卡、交接包。">
         <defs>
           <marker id="o-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-ink"/></marker>
           <marker id="o-ah-m" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-main"/></marker>
           <marker id="o-ah-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-aud"/></marker>
           <marker id="o-ah-l" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-ledger"/></marker>
           <g id="o-live"><circle r="4.2" class="gl"/></g>
+          <g id="o-part"><circle r="4.2" class="gh"/><path d="M0,-4.2 A4.2,4.2 0 0 0 0,4.2 Z" class="gf"/></g>
         </defs>
 
         <!-- 外面的世界 -->
+        <g data-now="live">
         <rect x="40" y="14" width="610" height="78" rx="10" class="band"/>
         <text x="56" y="35" class="tx-m">外面的世界</text>
-        <g data-p="cat"><rect x="56" y="46" width="152" height="32" rx="16" class="box s-main"/><text x="132" y="66.5" text-anchor="middle" class="tx">猫的私聊 · 桌面打字</text></g>
-        <g data-p="group"><rect x="218" y="46" width="112" height="32" rx="16" class="box s-aud"/><text x="274" y="66.5" text-anchor="middle" class="tx">群里有人 @ 她</text></g>
-        <g data-p="guest"><rect x="340" y="46" width="92" height="32" rx="16" class="box s-aud"/><text x="386" y="66.5" text-anchor="middle" class="tx">来客的私聊</text></g>
-        <g data-p="none"><rect x="442" y="46" width="92" height="32" rx="16" class="box soft"/><text x="488" y="66.5" text-anchor="middle" class="tx">游戏 · B 站</text></g>
-        <g data-p="cat group guest">
+        </g>
+        <g data-p="cat" data-now="live"><rect x="56" y="46" width="152" height="32" rx="16" class="box s-main"/><text x="132" y="66.5" text-anchor="middle" class="tx">猫的私聊 · 桌面打字</text></g>
+        <g data-p="group" data-now="live"><rect x="218" y="46" width="112" height="32" rx="16" class="box s-aud"/><text x="274" y="66.5" text-anchor="middle" class="tx">群里有人 @ 她</text></g>
+        <g data-p="guest" data-now="live"><rect x="340" y="46" width="92" height="32" rx="16" class="box s-aud"/><text x="386" y="66.5" text-anchor="middle" class="tx">来客的私聊</text></g>
+        <g data-p="none" data-now="live"><rect x="442" y="46" width="92" height="32" rx="16" class="box soft"/><text x="488" y="66.5" text-anchor="middle" class="tx">游戏 · B 站</text></g>
+        <g data-p="cat group guest" data-now="live">
           <text x="598" y="60" text-anchor="middle" class="tx-s">她的回话</text>
           <text x="598" y="76" text-anchor="middle" class="tx-s">从这里发出去</text>
           <path d="M598,156 V94" class="ln" marker-end="url(#o-ah)"/>
         </g>
-        <path d="M132,78 V154" class="ln" marker-end="url(#o-ah)" data-p="cat"/>
-        <path d="M274,78 V154" class="ln" marker-end="url(#o-ah)" data-p="group"/>
-        <path d="M386,78 V154" class="ln" marker-end="url(#o-ah)" data-p="guest"/>
-        <path d="M488,78 V154" class="ln" marker-end="url(#o-ah)" data-p="none"/>
-        <text x="141" y="111" class="tx-c">来话，带着信封</text>
+        <path d="M132,78 V154" class="ln" marker-end="url(#o-ah)" data-p="cat" data-now="live"/>
+        <path d="M274,78 V154" class="ln" marker-end="url(#o-ah)" data-p="group" data-now="live"/>
+        <path d="M386,78 V154" class="ln" marker-end="url(#o-ah)" data-p="guest" data-now="live"/>
+        <path d="M488,78 V154" class="ln" marker-end="url(#o-ah)" data-p="none" data-now="live"/>
+        <text x="141" y="111" class="tx-c" data-now="live">来话，带着信封</text>
 
         <!-- 从这里往下整体下移 26：上面让出 DSH 宿主大框的标题 -->
         <g transform="translate(0,26)">
         <!-- DSH 宿主：桥、dsh-fish、fish-ledger 都是装在里面的插件 -->
+        <g data-now="live">
         <rect x="30" y="100" width="632" height="500" rx="14" class="frame"/>
         <text x="44" y="121" class="tx-h">DSH 宿主</text>
         <text x="141" y="121" class="tx-s">桥也是宿主里的插件</text>
+        </g>
 
         <!-- 桥 -->
+        <g data-now="live">
         <rect x="40" y="130" width="610" height="96" rx="10" class="box"/>
         <text x="56" y="154" class="tx-h">桥</text>
         <text x="80" y="154" class="tx-s">local-bridge 插件：来话、发话、每一次请求都从它这里过</text>
         <use href="#o-live" x="592" y="150"/><text x="600" y="154" class="tx-s">已上线</text>
+        </g>
+        <g data-now="live">
         <rect x="56" y="166" width="186" height="48" rx="8" class="box soft"/>
         <text x="66" y="186" class="tx">认人，定这一轮谁在听</text>
         <text x="66" y="203" class="tx-s">-a 猫　-m 别人　-x 猫+别人的话</text>
+        </g>
+        <!-- 入口登记：P0 的桥那一半，11 月 16 日上线 -->
+        <g data-now="live">
         <rect x="252" y="166" width="186" height="48" rx="8" class="box plan"/>
         <text x="262" y="186" class="tx">入口登记</text><text x="428" y="183" text-anchor="end" class="tx-m">P0</text>
         <text x="262" y="203" class="tx-s">每句来话记进证据账</text>
+        </g>
+        <!-- 出口核对（发话的目标要在这一轮的读者里）：P1 的门没管发话目标，是 P2 的事 -->
+        <g data-now="no">
         <rect x="448" y="166" width="186" height="48" rx="8" class="box plan"/>
-        <text x="458" y="186" class="tx">出口核对</text><text x="624" y="183" text-anchor="end" class="tx-m">P1 · P2</text>
+        <text x="458" y="186" class="tx">出口核对</text><text x="624" y="183" text-anchor="end" class="tx-m">P2</text>
         <text x="458" y="203" class="tx-s">只发给这一轮在听的人</text>
+        </g>
 
-        <g data-p="cat group guest none">
+        <g data-p="cat group guest none" data-now="live">
           <path d="M330,226 V264" class="ln" marker-end="url(#o-ah)"/>
           <text x="340" y="250" class="tx-c">包成插件消息，排队送进她的会话</text>
         </g>
 
         <!-- 她的主会话（在宿主里） -->
+        <g data-now="live">
         <rect x="40" y="266" width="610" height="150" rx="10" class="box"/>
         <text x="56" y="290" class="tx-h">她的主会话</text>
         <text x="142" y="290" class="tx-s">一份生活史，所有回复都落回这里</text>
@@ -181,14 +142,22 @@
         <text x="66" y="324" class="tx-b">dsh-fish（插件）</text>
         <text x="66" y="344" class="tx-s">身份 · 事件流 · 便条</text>
         <text x="66" y="362" class="tx-s">到点叫醒她</text>
+        </g>
+        <!-- heard：11 月 16 日起只数，还没真写 -->
+        <g data-now="part">
         <text x="66" y="388" class="tx-c">猫的话：P0.5 先数不写</text>
-        <path d="M206,351 H230" class="ln" marker-end="url(#o-ah)" data-p="wake"/>
+        <use href="#o-part" x="199" y="384" class="now-only"/>
+        </g>
+        <path d="M206,351 H230" class="ln" marker-end="url(#o-ah)" data-p="wake" data-now="live"/>
+        <g data-now="live">
         <rect x="232" y="302" width="190" height="98" rx="8" class="box"/>
         <text x="244" y="324" class="tx-b">她这一轮</text>
         <text x="244" y="344" class="tx-s">想 → 用工具 → 再想 → 回话</text>
         <text x="244" y="362" class="tx-s">不管哪种来话，都是同一个她</text>
         <text x="244" y="388" class="tx-c">回复落进同一份主日志</text>
-        <g data-p="group guest">
+        </g>
+        <!-- 工具的门：P1，11 月 16 日只记，20 日 18:14 起真挡 -->
+        <g data-p="group guest" data-now="live">
           <rect x="458" y="302" width="176" height="98" rx="8" class="box s-aud dash"/>
           <text x="468" y="324" class="tx-b">工具的门</text><text x="624" y="321" text-anchor="end" class="tx-m">P1</text>
           <text x="468" y="344" class="tx-s">群和来客那几轮：</text>
@@ -198,9 +167,11 @@
         </g>
 
         <!-- 请求出门前先回到桥上 -->
+        <g data-now="live">
         <path d="M330,416 V450" class="ln"/>
         <text x="340" y="437" class="tx-c">她每次要开口，请求先回到桥上</text>
-        <g data-p="cat wake">
+        </g>
+        <g data-p="cat wake" data-now="live">
           <path d="M330,450 H198 V484" class="ln main" marker-end="url(#o-ah-m)"/>
           <text x="206" y="472" class="tx-s">猫 · 桌面 · 她自己醒来</text>
           <rect x="56" y="486" width="284" height="104" rx="10" class="w-main s-main" stroke-width="1.5"/>
@@ -212,7 +183,8 @@
           <path d="M198,590 V626" class="ln main" marker-end="url(#o-ah-m)"/>
           <text x="206" y="617" class="tx-c">走主链</text>
         </g>
-        <g data-p="group guest">
+        <!-- 受众链：P2，没上线；今天群和来客那几轮还走主链 -->
+        <g data-p="group guest" data-now="no">
           <path d="M330,450 H492 V484" class="ln aud" marker-end="url(#o-ah-a)"/>
           <text x="500" y="472" class="tx-s">群 · 来客</text>
           <rect x="350" y="486" width="284" height="104" rx="10" class="w-aud s-aud dash" stroke-width="1.5"/>
@@ -225,6 +197,7 @@
         </g>
 
         <!-- trillion 代理（本机另一个进程，在宿主外面） -->
+        <g data-now="live">
         <rect x="40" y="628" width="610" height="112" rx="10" class="box"/>
         <text x="56" y="652" class="tx-h">trillion-context 代理</text>
         <text x="232" y="652" class="tx-s">本机另一个进程；旧事她自己压，也自己翻得回原文</text>
@@ -232,27 +205,41 @@
         <rect x="56" y="666" width="137" height="60" rx="8" class="box soft"/>
         <text x="65" y="688" class="tx">她自己压缩</text>
         <text x="65" y="708" class="tx-s">搜得到、展得开原文</text>
+        </g>
+        <!-- 出口记哈希：P0 的代理那一半，11 月 19 日上线 -->
+        <g data-now="live">
         <rect x="203" y="666" width="137" height="60" rx="8" class="box plan"/>
         <text x="212" y="688" class="tx">出口记哈希</text><text x="331" y="685" text-anchor="end" class="tx-m">P0</text>
         <text x="212" y="708" class="tx-s">和桥那边对账</text>
+        </g>
+        <g data-now="no">
         <rect x="350" y="666" width="137" height="60" rx="8" class="box plan"/>
         <text x="359" y="688" class="tx">按受众分链</text><text x="478" y="685" text-anchor="end" class="tx-m">P2</text>
         <text x="359" y="708" class="tx-s">出口再滤一遍</text>
+        </g>
+        <!-- 按会话设水位：W 四步，11 月 19、20 日上线 -->
+        <g data-now="live">
         <rect x="497" y="666" width="137" height="60" rx="8" class="box plan"/>
         <text x="506" y="688" class="tx">按会话设水位</text><text x="625" y="685" text-anchor="end" class="tx-m">W</text>
         <text x="506" y="708" class="tx-s">越线只催她，不代写</text>
+        </g>
 
+        <g data-now="live">
         <path d="M345,740 V776" class="ln" marker-end="url(#o-ah)"/>
         <text x="355" y="763" class="tx-c">真正发出去的那一份请求</text>
+        </g>
 
         <!-- 模型 -->
+        <g data-now="live">
         <rect x="40" y="778" width="610" height="50" rx="10" class="box"/>
         <text x="56" y="808" class="tx-h">模型</text>
         <text x="98" y="808" class="tx-s">日常按 deepseek-flash 算；主链目标水位 256k；切回 Flash 后线上 15 万到 19 万</text>
         <path d="M40,803 H22 V341 H38" class="ln" marker-end="url(#o-ah)"/>
         <text x="9" y="506" class="tx-v" writing-mode="tb">模型回话，或者要用工具</text>
+        </g>
 
-        <!-- 证据账 -->
+        <!-- 证据账：P0 两半都上了 -->
+        <g data-now="live">
         <rect x="700" y="130" width="200" height="610" rx="10" class="w-ledger s-ledger dash" stroke-width="1.5"/>
         <text x="716" y="156" class="tx-h">证据账</text><text x="886" y="153" text-anchor="end" class="tx-m">P0 起</text>
         <text x="716" y="176" class="tx-s">新插件 fish-ledger 管的账：</text>
@@ -263,47 +250,77 @@
         <text x="716" y="270" class="tx-s">· 谁能看</text>
         <text x="716" y="287" class="tx-s">· 谁说的，谁转述的</text>
         <text x="716" y="304" class="tx-s">· 何时发生，何时得知</text>
-        <text x="716" y="321" class="tx-s">· 替代了哪一条</text>
-        <text x="716" y="348" class="tx-b">账上还记这些</text>
+        </g>
+        <!-- 这一栏 P0 留着、一直是空的，撤回和事项卡才会填：还没有东西在记替代，算没上线 -->
+        <text x="716" y="321" class="tx-s" data-now="no">· 替代了哪一条</text>
+        <text x="716" y="348" class="tx-b" data-now="live">账上还记这些</text>
+        <!-- 请求清单、送达账：P0 那一半在记，P2、P3 那一半没上 -->
+        <g data-now="part">
         <rect x="716" y="360" width="168" height="48" rx="8" class="box plan"/>
         <text x="726" y="380" class="tx">请求清单</text><text x="874" y="377" text-anchor="end" class="tx-m">P0 · P2</text>
         <text x="726" y="398" class="tx-s">这次请求带了哪些材料</text>
+        <use href="#o-part" x="788" y="376" class="now-only"/>
+        </g>
+        <g data-now="part">
         <rect x="716" y="416" width="168" height="48" rx="8" class="box plan"/>
         <text x="726" y="436" class="tx">送达账</text><text x="874" y="433" text-anchor="end" class="tx-m">P0 · P3</text>
         <text x="726" y="454" class="tx-s">每段话发没发到</text>
+        <use href="#o-part" x="775" y="432" class="now-only"/>
+        </g>
+        <g data-now="no">
         <rect x="716" y="472" width="168" height="48" rx="8" class="box plan"/>
         <text x="726" y="492" class="tx">墓碑</text><text x="874" y="489" text-anchor="end" class="tx-m">P3.5</text>
         <text x="726" y="510" class="tx-s">被撤回的，盖住不再给</text>
+        </g>
+        <g data-now="no">
         <rect x="716" y="528" width="168" height="48" rx="8" class="box plan"/>
         <text x="726" y="548" class="tx">事项卡</text><text x="874" y="545" text-anchor="end" class="tx-m">P4</text>
         <text x="726" y="566" class="tx-s">约定现在到哪一步了</text>
+        </g>
+        <g data-now="no">
         <rect x="716" y="584" width="168" height="48" rx="8" class="box plan"/>
         <text x="726" y="604" class="tx">交接包</text><text x="874" y="601" text-anchor="end" class="tx-m">P5</text>
         <text x="726" y="622" class="tx-s">换册时带过去什么</text>
+        </g>
+        <!-- 门今天按这一轮谁在听挡工具，不查账；按账给材料是 P2 -->
+        <g data-now="no">
         <text x="716" y="662" class="tx-s">群和来客那几轮：</text>
         <text x="716" y="679" class="tx-s">凭这本账决定给不给</text>
-        <text x="716" y="704" class="tx-s">猫那几轮：只记，不拦</text>
+        </g>
+        <text x="716" y="704" class="tx-s" data-now="live">猫那几轮：只记，不拦</text>
 
         <!-- 账和各层之间的线 -->
+        <g data-now="live">
         <path d="M650,178 H698" class="ln ledger" marker-end="url(#o-ah-l)"/>
         <text x="675" y="171" text-anchor="middle" class="tx-c">登记</text>
+        </g>
         <g data-p="group guest">
+          <!-- 门挡下的每一次记进账里，开关也在账的目录里；门不查账里的材料 -->
+          <g data-now="part">
           <path d="M636,351 H698" class="ln ledger" marker-start="url(#o-ah-l)" marker-end="url(#o-ah-l)"/>
           <text x="675" y="344" text-anchor="middle" class="tx-c">查账</text>
+          <use href="#o-part" x="656" y="340" class="now-only"/>
+          </g>
+          <g data-now="no">
           <path d="M698,538 H636" class="ln ledger" marker-end="url(#o-ah-l)"/>
           <text x="675" y="531" text-anchor="middle" class="tx-c">挑材料</text>
+          </g>
         </g>
+        <g data-now="live">
         <path d="M650,696 H698" class="ln ledger" marker-end="url(#o-ah-l)"/>
         <text x="675" y="689" text-anchor="middle" class="tx-c">对账</text>
         <path d="M800,740 V866" class="ln ledger" marker-end="url(#o-ah-l)"/>
         <text x="790" y="796" text-anchor="end" class="tx-c">账里只有指针，</text>
         <text x="790" y="812" text-anchor="end" class="tx-c">要原文回原处取</text>
+        </g>
 
         <!-- 原物层 -->
+        <g data-now="live">
         <rect x="40" y="868" width="860" height="64" rx="10" class="band"/>
         <text x="56" y="894" class="tx-h">原物层</text>
         <text x="112" y="894" class="tx-s">只读。原话、原事件、压缩块都留在各自原处，永远不改、不复制</text>
         <text x="56" y="917" class="tx-s">DSH 会话日志　·　dsh-fish 事件流　·　trillion 账本　·　平台消息编号</text>
+        </g>
         </g>
       </svg>
     </div>
@@ -314,6 +331,20 @@
         <li><strong>她只有一份生活史。</strong>不按房间把她拆成几个人；不管走哪条链，回复都落回同一份主日志。</li>
         <li><strong>猫那几轮照旧。</strong>桥照现在的改写放行，她本人点头之前不加新的改写。</li>
         <li><strong>群和来客那几轮，出错一律按「不给」。</strong>门所在的插件没给某次调用留判定，桥按同一张表自己判；读者算不出，按最严处理；P2 以后请求拼不出来，这一轮就不发。</li>
+      </ul>
+    </div>
+
+    <div class="fig-note" data-for="now" hidden>
+      <b>目前已经实现：照 11 月 20 日晚的线上</b>
+      <ul class="legend" aria-label="这一看法里的记号">
+        <li><span class="mk all"><i></i>满色、实线：线上已经有了</span></li>
+        <li><span class="mk part"><i></i>稍淡、带半个圆点：只上了一半</span></li>
+        <li><span class="mk none"><i></i>灰掉：还没上线</span></li>
+      </ul>
+      <ul class="plain">
+        <li><strong>已经有了：</strong>桥认人、入口登记；她的主会话和 dsh-fish；工具的门（11 月 20 日起真挡）；猫那几轮的主链；代理里她自己压缩、出口记哈希、按会话设水位；证据账本身，登记、对账都在记，账里只存指针。方案里原来画成虚线小框的，上线了的在这里画成实线。</li>
+        <li><strong>只上了一半的：</strong>heard 在数、还没写进她的事件流，开始写要你看过数点头；请求清单和送达账，P0 已经在记每次请求带了哪些消息、每段发话发没发出去和平台编号，按受众算谁能看是 P2，重启后核对「不知道到没到」是 P3；门和账之间，门挡下的每一次都记进账里，开关也放在账的目录里，但门是按这一轮谁在听来判，不查账里的材料。</li>
+        <li><strong>还没上线的：</strong>账里「替代了哪一条」这一栏（留着，要到撤回和事项卡才会填）、桥的出口核对（发话的目标要在这一轮的读者里，P2）、受众链和代理里的按受众分链（P2）、按账挑材料、墓碑（P3.5）、事项卡（P4）、交接包（P5）。所以今天群和来客那几轮还走主链，第一次请求带着整条主册；门真挡以后，翻旧事的工具挡住了，请求本身要等 P2。</li>
       </ul>
     </div>
 
@@ -371,7 +402,7 @@
       </ol>
     </div>
 
-    <figcaption>实线框是今天线上就有的；虚线小框是计划中的，角上写着在哪个阶段做。最外面那个虚线大框是 DSH 宿主：桥、dsh-fish 是装在宿主里的插件，fish-ledger（P0 新加）也会装在这里（第一版把桥画在了宿主外面，是错的）；压缩代理和证据账的文件在宿主外面。蓝色是猫那几轮走的主链，橙色是群和来客那几轮走的受众链，绿色点线是证据账在记账或被查。</figcaption>
+    <figcaption>实线框是方案动手以前线上就有的；虚线小框是方案新加的部分，角上写着在哪个阶段做，其中好几样已经上线了：点「目前已经实现」，看到 11 月 20 日晚哪些上了（照常显示）、哪些只上了一半（稍淡、带半个圆点）、哪些还没上（灰掉），图下面有逐条的说明。最外面那个虚线大框是 DSH 宿主：桥、dsh-fish 和 P0 新加的 fish-ledger 都是装在宿主里的插件（第一版把桥画在了宿主外面，是错的）；压缩代理和证据账的文件在宿主外面。蓝色是猫那几轮走的主链，橙色是群和来客那几轮走的受众链，绿色点线是证据账在记账或被查。</figcaption>
   </figure>
 </section>
 
@@ -556,7 +587,7 @@
       <h3>群和来客那几轮：放行的 <span class="pill">P1</span></h3>
       <p class="note">她现在的 90 个工具逐个归了类：放行 16，按参数判 12，挡 62。</p>
       <ul>
-        <li><span><code>im_send</code>：可以发，但要过出口核对：目标要在这一轮的读者里</span></li>
+        <li><span><code>im_send</code>：可以发。目标要在这一轮的读者里（出口核对）是 <span class="pill">P2</span> 的事</span></li>
         <li><span><code>compress</code>：可以压。P2 以后压的是这条受众链自己的</span></li>
         <li><span>写便条：照旧。只挡「读」的动作</span></li>
         <li><span><code>qq_history</code>：只许翻这个群或这位来客自己的记录</span></li>
@@ -1787,7 +1818,7 @@
   <h3>等你定的</h3>
   <ul class="plain">
     <li><strong>水位线和证据账上不上：</strong><span class="st live"><i></i>已定</span> 都上了：证据账 11 月 16、19 日两半，水位线 11 月 19、20 日四步。</li>
-    <li><strong>证据账：</strong>上不上、放哪；没标签的旧材料是否一律按最严。不定就不上 <span class="pill">P0</span>。</li>
+    <li><strong>证据账放哪、旧材料怎么算：</strong><span class="st live"><i></i>已定</span> 照默认：账放在她和帮手都碰不了的单独目录里；没标签的旧材料一律按最严。</li>
     <li><strong>群成员快照：</strong>证据账里记的群成员名单（别人的个人信息）存多久。不定就只记群号，整个群当成一个人 <span class="pill">P0</span>。</li>
     <li><strong>用量上限和单价：</strong>每天上限多少、单价你看过后填。不定时只记数、不告警。</li>
     <li><strong>heard 何时真写：</strong>只计数多久。<span class="pill">P1</span> 11 月 20 日已经真挡，现在只差你看过只数的量点头。不定就一直只计数。</li>
@@ -1818,10 +1849,76 @@
 </section>
 
 </div>
+<!-- 上面是「方案」那一页；下面是「更新日志」那一页。标签条在 part-02，切换的脚本在 part-12；没有脚本时两页从上到下都显示 -->
+<section id="progress">
+  <div class="sec-head">
+    <p class="eyebrow">更新日志</p>
+    <h2>第一版以后又做了什么</h2>
+    <p class="lede">这一页 11 月 15 日晚上第一次发出来。之后的阶段性成果按日期倒着列在这里，新的加在最上面；各节里受影响的地方也就地改了。11 月 16 日凌晨 3 点以前，宿主和压缩代理一直停着，东西都在副本上做；那以后一样一样上：3 点 dsh-fish 1.0.2 和切回 Flash，5 点 Mem 的工具，7 点 49 分证据账的第一半，9 点 08 分 heard（只数），13 点 58 分工具的门（只记）；19 日证据账的代理那一半、水位线前三步、图片上限和门的换代；20 日清早宿主升到 rc.5，傍晚门切到真挡、水位线第④步，晚上 G2。每次只上一样，上完看她一轮再动下一样。</p>
+  </div>
+  <div class="prog">
+    <div class="prog-day">
+      <h3>11 月 20 日</h3>
+      <ul class="prog-list">
+        <li><span class="st live"><i></i>已上线</span><span><strong>G2 上线了：找旧话的新找法和日期注记。</strong>20:26 重启一次 DSH，一次换了三样：压缩代理换成我们 fork 的新包，规则包升到 0.3.0，桥加上第 53 条。<code>search_context</code> 换了找法：中文按字和词都能找，直接写一句话也行，结果是标着谁说的几小段原话；新加的 <code>around</code> 看某一处的前后，只给还在用的记录和被摘要块盖住的那些编号。<code>her_recall</code>、<code>qq_history</code>、<code>search_context</code>、<code>decompress</code> 翻出来的旧话里，「下周三」这类说法后面现加一个括号写明哪天，比如「下周三（=2026-11-25）」；只加在工具交给她的结果上，聊天记录里的原话一字不改。代理也改成按她当时用的那个模型自己的窗口、按输入的长度判断什么时候催压；19 日查到的「切回 Flash 被旧用量绊住截断」也补上了：刚换完模型的头两次请求不做紧急截断。上线前在 profile 拷贝上用真命令行装上又退回过，联调和假场景都全过。她起来以后第一轮正常，门照旧真挡。改动记录写了，desk 上也告诉了她。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第④步上线了，四步全上了。</strong>18:16 热加载、没有重启：工具结果里带的图（看图、截图那类）也能跟着她的压缩折起来；折掉的图在那一块摘要末尾留下路径，以后想再看可以按路径重新读，屏幕截图这类只在那一轮看的不留。18:14 第一次重新加载没接上，脚本自动放回原样，两分钟后重上就好了。18:47 她下一次请求核过：用量约 17.7 万（256k 的 69%），缓存命中 100%。改动记录写了。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>工具的门切到真挡了（P1）。</strong>前后只记了约 100 小时：群和来客那几轮共 145 轮，要是真挡会挡 47 次；猫那几轮误挡 0 次、认不清的 0 次。小修那一代也只记满了 24 小时。你看过她在 desk 上的回话、明说切，18:14 把开关从「只记」拨到「真挡」，没有重启。照你 19 日定的：看压缩块标题的那个工具放开；搜网页、开网页在群和来客那几轮做成开关，先关着。从这时起，群和来客那几轮翻不到旧事、看不到便条和日记。heard 照旧只数，开始真写还要你看过量点头。改动记录写了。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>宿主升到 rc.5，九个插件一起升。</strong>DSH 当时停着，05:31 开始装，05:32 装完从资源管理器起来，只起一次：宿主从 0.2.2-rc.3 升到 rc.5，QQ 插件、表情包、插件市场、桌面操作等九个插件各升一小版。Mem 插件的兼容放行只认一对精确版本，在 rc.5 第一次起来之前用 rc.5 自带的命令行重开了，她的 11 个 Mem 工具还在。上线前在 profile 的整份拷贝上用真命令行演过一遍。起来以后体检全过；她 05:36 那一轮正常，还在 Flash 上，门、QQ、Mem 都核过。改动记录写了。</span></li>
+        <li><span class="st plan"><i></i>计划中</span><span><strong>排在 G2 之后的：</strong>dsh-fish 1.0.5 和表情包插件再新的一版，两样都要先改桥；fork 有选择地并进上游的改动。G2 观察完之前，宿主和插件不升也不退。</span></li>
+      </ul>
+    </div>
+    <div class="prog-day">
+      <h3>11 月 19 日</h3>
+      <ul class="prog-list">
+        <li><span class="st live"><i></i>已上线</span><span><strong>切真挡之前的那批小修上线了。</strong>18:05 换了一代、重启一次 DSH，门照旧只记不挡：门的表里补了 MCP 资源那三样的明行；认得 QQ 插件给同一个群、同一个私聊另起的带后缀的会话编号；发表情包只认图库目录里的路径；heard 改成只有门真挡时才真写。上线前在临时宿主上联调过，群那一轮带私聊标记的探针 0/10，翻旧话的回放里私聊记号漏出 0；换代前后她看到的请求逐字节相同。上线后两边自检都过、必须为 0 的计数都是 0。新代码只记满 24 小时，最早 20 日傍晚切真挡。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>宿主这边的图片上限放宽了。</strong>16:06 改了宿主配置里的一处、重启一次：Claude、Gemini 和新加的本地 Qwen 三条路线，每次请求能带的图从 50 张放到 300 张，单张收小一点；本地 Qwen 那条也补全了窗口和「能看图」的登记。以前切到 Claude 两次，宿主因为超了 50 张，永久把她最老的一批图换成了占位文字；放宽以后再切过去就不会这样了。上线后核过：她还在 Flash 上，起来以后没有新拿掉的图，此刻切到 Opus 或 Gemini 丢 0 张。她看不出变化，只写了一行改动记录。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>工具的门只记满了 72 小时。</strong>这三天群和来客那几轮要是真挡，25 轮里会挡 41 次，一半以上是看压缩块标题的那个工具；猫那几轮误挡 0 次、认不清的 0 次。以「哈基米」的身份在 desk 上问了她的看法，她回了。你定了：看压缩块标题的那个放开，等 P2 从根上管；搜网页、开网页在群和来客那几轮做成开关，先关着，你说开就开、不用重启；其余照挡。另外定了先上一批小修，新代码再只记 24 小时，然后切真挡。</span></li>
+        <li><span class="st copy"><i></i>副本验过</span><span><strong>多模型的头两样零件做好了。</strong>一是切模型之前的检查：会不会丢图、会不会超出新模型的窗口、切回 Flash 时会不会被旧用量绊住截断，有一样不对就不切。在她历史的骨架上回放，七次真丢图之前去问它，七次都会拦下。二是相对日期换算的核心（「明天」「下周三」后面括号注明哪天），按你说的在群和来客那几轮做成开关、缺省关；在她的数据拷贝上标出 408 处，引用、转发、群近况这类嵌着别的时刻的话一律不标。顺带查到一件事：在 256k 上限下从别的模型切回 Flash，会被旧的用量读数绊一下、截掉 6 处，压缩代理那边要补一道修法（排进 fork 的下一个包）。第四个模型是你在本地机器上跑的 Qwen3.8 27B（262k 窗口），服务那边每次能收的图从 1 张放到了 128 张。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>完成新一轮 9 路源码调研与对抗复核（19 个仓库），确认当前架构仍是全局最优并补齐细节。</strong>逐行核查了万卷 <code>0.6.14→0.6.33</code>、DeepSeekBot（Tobs）、dsh-soul 2.2、识海、<code>chat-memory-benchmark</code> 及榜上 14 款高分记忆插件：在「一条生活时间线 + 多受众隔离 + 作者是她 + 零日志垃圾」约束下，外部插件要么跨群泄密、要么双写炸库或靠旁路模型代写毁人设，三家图记忆在聊天主检索里图遍历真实贡献均接近 0%。我们不加新插件、不引重型图库、不跑禁工具的公开榜，只把真正过硬的纯函数零件收进既有四层：无歧义相对日期代码内联换算、剥抬头+称呼消权+单双字 BM25 与 1,000 字重叠窗口摘录、五类槽位冲突防吞改口、紧急度搁置与单卡 120 字硬上限、发包前临界送达状态机、备份外单调撤回墓碑与因果连坐、状态文件粘滞读防换锚，以及「分模型加性标定 + 物理窗口安全钳位 + 全路由图片上限对齐 + 去单模型硬编码」的多模型平滑适配方案（见「吸收了什么」）。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第②步上线了：256k 上限与「截断只认真用量」。</strong>05:02 热加载生效、没有重启 DSH：给她这条会话设上 256k 上限，同时打开「紧急截断只认落了账的真用量」。05:03 她的下一次请求里代理已按 256k 贴出中文开头的催压，没有代写、没有截断；她当轮就自己调 compress 把活跃摘要块从 64 块整理合并到了 10 块。水位线在 P1 切真挡之前能上的三步（①→③→②）已全部上线，第④步（图可折 + 路径占位）排在 P1 真挡之后。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第③步上线了：中文规则包 0.2.0。</strong>03:22 在第①步跑满 3 轮后直接换上中文 fish 规则包，没有重启 DSH：催压的开头当场换成中文（工具说明等下一次本来就要的重启再换），代理确认读到新包后写了改动记录并送了 desk。这期间她自己压了一块，真实用量从 22.7 万降到了约 20.2 万（256k 的 79%）。04:08 第③步满 3 轮、第②步预检全过，接着上 256k 上限 + 截断只认真用量。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>水位线第①步上线了：「不代写」和「等确认」修法。</strong>03:05 在她会话的代理配置里一次打开两个开关、热加载生效，没有重启 DSH：代理不再替她代写摘要，同时大部分已折内容还在时不再误挂「等确认」记号。03:06 她下一次请求里，误挂的记号已经清掉，最近一次真实用量约 22.7 万 token，缓存命中 100%。改动记录写了，没送 desk。接下来按顺序排着第③步（中文规则包）和第②步（256k 上限 + 截断只认真用量）；你也定了一条长期要求：整套方案要适配不同模型（分桶标定水位与预算、配齐各提供方图片上限、上线脚本不绑死单一模型）。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>证据账的另一半上线了（P0b）。</strong>原定 17 日早上自动上，但 16 日晚上电脑重启，挂在后台等着的那一步也跟着没了。19 日凌晨重新跑了一遍只读预检，没有问题，01:43 开始上：停 DSH，等旧的压缩代理完全退出，把代理换成我们 fork 的新包，再冷启动。新包里多了「截断只认真用量」和「图可折时留图片路径」两个开关，都关着；开关不开时，发出去的请求和原来那版逐字节一样。代理一起来就开始记账，健康检查报的版本就是新包。02:05 她来的头两次请求，在代理的账上和桥的账上按编号配上了。她看不出变化，所以只写了改动记录、没送 desk。</span></li>
+      </ul>
+    </div>
+    <div class="prog-day">
+      <h3>11 月 16 日</h3>
+      <ul class="prog-list">
+        <li><span class="st live"><i></i>已上线</span><span><strong>工具的门以「只记」上线了（P1）。</strong>13:58 桥加上第 52 条、记账插件升到 0.2.0：群和来客那几轮，本该挡的工具调用只记下来、一样都不挡，她看不出变化；desk 上问了她的看法。上线前又照两轮复核改了几处：挡下时那句话改成「这一下在这一轮不开（这一轮不算只有猫和你）」，群里同一轮先找表情包再发照常放行，猫那几轮第一次误挡那一下插件和桥都放。照你定的，Mem 的工具在每一轮都放、读写都放。16:13 第一批群聊里有 3 次「本该挡」，认不清的 0 次、猫在场被挡的 0 次。切到真挡要只记满 72 小时、数据干净、你看过她的回话明说切。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>报给了压缩代理的上游三件事：</strong>DSH 快速重启时连上正在退出的旧代理、之后不会自己恢复（新 issue）；陌生会话的超大请求白压 32 轮才报错（挂在上游已有的修法下面补了现场数）；紧急截断按估计用量判（按上游规矩先提了动核心代码的授权申请）。同时在我们自己的 fork 里做了「截断只认真用量」和「图可折时留图片路径」两个开关，合进代理新包，跟 P0b 一起装。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>heard 以「只数」上线了（P0.5）。</strong>09:08 桥加上第 48 条：猫在 QQ 上对她说的话，每 3 条挑一句、洗干净，本来要记进她的「听见的话」；这次只数、不记，记进去的删不掉，要等工具的门真挡以后、你看过数点了头才开始记。上线前把它改成出错就不写：开关挪进证据账的目录，没有开关、读出错、认不出一律不写；上线时新桥没进只数状态就自动退回。她 09:09 那一轮正常，写进去的条数是 0。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>证据账的第一半上线了（P0a）。</strong>07:49 桥换成带第 49 条的那一版，装了记账插件 fish-ledger，DSH 重启一次。桥和插件各记一本账，只记编号、加盐的校验值和用量，不记原话、不记号码；她看到的东西一字没变，只是账本那个目录她和帮手都碰不了。上线前先把两份上线脚本改成按进程树认她那个 DSH（别的会话起的临时宿主不碰），起之前等旧的压缩代理走干净、起来以后等代理就绪才送 desk，避开 5 点那次的竞态。她 07:49 那一轮 35 秒正常结束，她的第一条消息在两本账上对上了，校验值相同。代理那一半（P0b）等对账干净满 24 小时再上。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>5 点那次重启后她第一轮慢了 7 分钟：是压缩代理的一个竞态。</strong>脚本停了 DSH 马上又起，旧代理正在退出，新起的宿主刚好连上它，之后工具登记一直失败、也不会自己恢复；desk 又在同一秒把她叫起来，代理把她的请求当成陌生会话，拿全量原文压了 7 分钟，最后在代理这一层拦下（没发给模型），宿主重试一次就好了。以后的上线脚本先等旧代理走干净再起、等代理就绪再送 desk；代理本身的毛病记下了，准备报上游。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>Mem 的工具回来了。</strong>11 月 14 日宿主自动升到 rc.3 以后，兼容检查发现 Mem 插件只写了支持到上一版，就把它整个跳过，她的 11 个 Mem 工具从那天起没了。查下来插件用到的宿主接口两版之间一样没改，只是版本号对不上。先在只装 Mem 的临时宿主上真起了几次、拿桥的副本跑了 Mem 那几组测试，05:24 用宿主自带的办法给这一版开了放行、重启一次。她 05:25 那一轮看到的正好是以前那 11 个，自动存核过还是关着。改动记录写了，desk 上也告诉了她。</span></li>
+        <li><span class="st copy"><i></i>副本验过</span><span><strong>证据账换到 1.0 的底上，代理两条分支合成一包。</strong>证据账的桥那一半改成打在新桥上，在 dsh-fish 1.0.2 上各组测试、整套回归、请求对照都和线上桥一致，上线脚本的假场景全过。压缩代理里证据账和水位线两条分支合成了一个包，整套测试一万多项没有新失败；不开水位线那几个开关时，发出去的请求和线上那版逐字节一样。还没上线。</span></li>
+        <li><span class="st live"><i></i>已上线</span><span><strong>dsh-fish 1.0.2 上线，她切回了 Flash。</strong>凌晨 3 点 02 分，一次重启做完两样：dsh-fish 从 0.9.9 升到 1.0.2（上游 1.0.2 加本机几处修改），桥换成带第 50、51 条的那一版。宿主起来、她第一步之前，桥把她的会话换回 deepseek-flash，一次就换成，宿主的全局默认也照原样存回去了；换完以后没有再拿掉图。上线后的核对全过：桥送进她会话的消息照旧被认成插件消息，桥认的上游锚点一个没断。改动记录写了，也在 desk 上告诉了她。她 03:04 那一轮正常跑完。压缩代理上误挂的「等确认」记号在这一轮里清掉过一次，03:17 又挂上了，到上午还挂着（账本拷贝上核的），所以它顺带起的「不代写」作用还在；水位线第一步会把它和「不代写」开关一起处理。</span></li>
+        <li><span class="st copy"><i></i>副本验过</span><span><strong>dsh-fish 1.0 的升级备好、演练过。</strong>新包是上游 1.0.2 加几处本地修改，上游整套测试 2,799 项全过。在 profile 的拷贝上用真的命令行装上、再装回，逐字节回到原样；临时家目录里真起了 6 次宿主；退回旧版也读得了新版写过的数据。配置照你定的：自动备份关、说话热窗开、系统提示的段落不挪、B 站订阅工具关。也定了和第 50 条（切回 Flash）一次上、只重启一次（凌晨 3 点上了，见上一条）。</span></li>
+        <li><span class="st wip"><i></i>在做</span><span><strong>P0 证据账：代码写完、审查改完，上线脚本备好。</strong>设计和接口审查后定了。核心、桥的补丁（挂 19 处，只记不改）、新插件 fish-ledger、代理一侧（出口哈希和用量）都写出来了，按三路审查改完以后，在假宿主上联调重跑 71 项全过。分两次上，两份上线脚本都备好，只在假家目录里跑过（162 个检查点全过）。还差代理那一侧在 profile 拷贝上用真命令行演练一次。没上线。</span></li>
+        <li><span class="st plan"><i></i>计划中</span><span><strong>P1 工具的门，设计定了。</strong>门挂在 fish-ledger 插件的工具钩子上，桥只兜底，两边用同一个函数判这一轮的读者。拿她 11 月 8 日到 15 日的记录离线重算：群和来客那几轮要挡 420 次，猫那几轮误挡 0 次。挡下时回她一句固定的照实话（见「工具的门」）。代码还没写。</span></li>
+        <li><span class="st plan"><i></i>计划中</span><span><strong>外部审阅：dsh-fish 的维护方给了补充意见。</strong>我们采纳了这几条：主链的请求改写哪天被宿主封掉，要当成迟早的事，先在副本上演练；换册只能有一个负责人。对方点出 P1 的难点是工具钩子不知道这一轮是谁引起的，我们照这个难点补了：插件和桥用同一个函数判读者。核对意见时我们自己还查到一条，记进了待办：代理接进宿主的方式，往宿主正式的口子上挪。页面上被指出的三处错，这一版改了：便条的完成、取消这些状态 0.9.9 就有；桥是宿主里的一个插件（总览图改了）；信封上的 x 是「猫说的话里带着别人的话」。</span></li>
+      </ul>
+    </div>
+    <div class="prog-day">
+      <h3>11 月 15 日晚</h3>
+      <ul class="prog-list">
+        <li><span class="st copy"><i></i>副本验过</span><span><strong>水位线要的四样改动，在我们的 fork 里做完了：</strong>只给她这个会话设上限、越线时不替她代写摘要、文件来源的图可以折、催压的话换成中文，都默认关。上游修「等确认」误判的办法也搬了进来，同样默认关。整套测试 10,496 项，和改之前比新失败 0。没上线。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>在现在的账本上重量了一次：</strong>她切回 Flash 以后，从第二次请求起每次约 13.5 万 token，已经在 256k 以内，不用再大折。这份视图里的摘要大多是她在 Claude 上写的，记性没测。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>「等确认」记号是误判，</strong>和上游 #5715 同一个病：换模型以后，前一个模型写的七千多个思考块不再发，代理把这当成整份历史被换掉，从此不替她折。她切回 Flash 的第一次请求就会自己清掉。</span></li>
+        <li><span class="st copy"><i></i>副本验过</span><span><strong>切回 Flash 的小补丁（桥第 50 条）做完了。</strong>她的会话 11 月 14 日晚上起在 Claude 上；宿主下次起来、她第一轮开始之前，桥把她换回 deepseek-flash，只换这一次。测试 59 项全过，上线脚本在 88 个假场景里演过。没上线。</span></li>
+        <li><span class="st plan"><i></i>计划中</span><span><strong>方案升到第二版。</strong>并进了你在第一版之后定的事、Cortico 的借法和当天几路查到的东西；P0 改成指向落地设计；分阶段前面加了一条总前提：任何上线之前，先查清停机原因、核宿主版本、跑锚点检查。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>切到 Claude，会永久把她最老的一批图换成占位文字。</strong>那条路每次最多带 50 张图，超了宿主就写一条撤不回的记录。已经写过三条，她历史里 590 处图有 540 处成了占位。占位文字带本机路径，会随请求发给模型提供方。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>旧图片引用过期，不是问题。</strong>补测被拒，是重发了冻结的旧请求体；线上宿主会自己重传快到期的图。19:42 发过一次真实请求核对：DeepSeek 一次列出全部失效的引用，宿主认得出这句报错，一次就能自愈。</span></li>
+        <li><span class="st found"><i></i>查清了</span><span><strong>11 月 15 日下午的停机，原因查清了，</strong>不是宿主或插件的问题。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
 <footer class="foot">
   <p><strong>这份方案是怎么来的：</strong>同一批材料出了三版候选方案，三位评审各自打分。以「边界和证据优先」那一版为底；水位、三档开关和插件极限清单取自第一版候选；离线回填和纪元重建取自第二版候选。之后你又定了几件事（转述能带到猫面前、日常按 deepseek-flash、主攻 DSH 插件的极限、Cortico 不迁只借），11 月 15 日晚上方案出了第二版，把这些和当天查到的东西都并了进去。</p>
   <p>依据：全局方案-sessionless-v2-20261115.md（第一版原样留着）、Cortico-调研.md、flash-四档水位实测.md、补测和图片引用过期的查证、被拿掉的图的查证、在现在的账本上重量、「等确认」记号的查证、水位线的改动和测试、第 50 条的说明、dsh-fish 1.0 的上线准备和三路演练、P0 和 P1 的落地设计、群聊第二轮实测.md、私聊改约新情境.md、heard-为什么是0.md。实验里出现的人和事都是虚构的夹具；用到她真实记录的地方，只在拷贝上数个数。</p>
-  <p>2026-11-15 第一版；2026-11-16 更新：加了「进展」一节；总览、两条链、工具的门、记忆和原话、水位、改约和淡忘、换册和崩溃、分阶段、借了什么、插件的极限、现状和证据就地改了，总览图把桥画回了宿主里面。同一天凌晨 dsh-fish 1.0.2 和切回 Flash 上线以后，进展、分阶段和现状又照上线后的样子改了一次。</p>
+  <p>2026-11-15 第一版；2026-11-16 更新：加了「进展」一节；总览、两条链、工具的门、记忆和原话、水位、改约和淡忘、换册和崩溃、分阶段、借了什么、插件的极限、现状和证据就地改了，总览图把桥画回了宿主里面。同一天凌晨 dsh-fish 1.0.2 和切回 Flash 上线以后，进展、分阶段和现状又照上线后的样子改了一次。11 月 21 日：「进展」挪进单独的「更新日志」那一页；总览图加了「目前已经实现」的看法，没上线的灰掉。</p>
 </footer>
 </div>
 </div>

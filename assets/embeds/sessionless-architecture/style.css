@@ -121,7 +121,28 @@
 .article-content .sl .pathfig[data-path="group"] [data-p]:not([data-p~="group"]),
 .article-content .sl .pathfig[data-path="guest"] [data-p]:not([data-p~="guest"]),
 .article-content .sl .pathfig[data-path="wake"] [data-p]:not([data-p~="wake"]){ opacity:.16 }
-@media (prefers-reduced-motion: reduce){ .article-content .sl .pathfig [data-p]{ transition:none } }
+/* 「目前已经实现」：图上每个元素手标了 data-now（live / part / no），不从类名推。
+   没上线的灰掉；只上了一半的稍淡、带半个圆点；已经上线的虚线框画成实线 */
+.article-content .sl .pathfig [data-now]{ transition:opacity .2s, filter .2s }
+.article-content .sl .pathfig .now-only{ display:none }
+.article-content .sl .pathfig[data-path="now"] .now-only{ display:inline }
+.article-content .sl .pathfig[data-path="now"] [data-now="no"]{ opacity:.4; filter:grayscale(1) }
+.article-content .sl .pathfig[data-path="now"] [data-now="part"]{ opacity:.8 }
+.article-content .sl .pathfig[data-path="now"] [data-now="live"] .plan{ stroke:var(--ink-2); stroke-dasharray:none }
+.article-content .sl .pathfig[data-path="now"] [data-now="live"] .dash{ stroke-dasharray:none }
+.article-content .sl .mk.none i{ background:var(--ink-2); opacity:.35 }
+@media (prefers-reduced-motion: reduce){ .article-content .sl .pathfig [data-p], .article-content .sl .pathfig [data-now]{ transition:none } }
+
+/* 两页：方案、更新日志。标签条要脚本才出来（没有脚本时它藏着，两页从上到下都显示） */
+.article-content .sl .tabs{ display:flex; gap:0.4rem; margin-top:4rem; border-bottom:1px solid var(--line-2) }
+.article-content .sl .tabs [role="tab"]{
+  font:600 var(--t-md)/1.4 var(--font-body); color:var(--muted); background:none; cursor:pointer;
+  border:0; border-bottom:3px solid transparent; margin-bottom:-1px; border-radius:6px 6px 0 0; padding:0.88rem 1.6rem 0.8rem;
+}
+.article-content .sl .tabs [role="tab"]:hover{ color:var(--ink); background:var(--surface-2) }
+.article-content .sl .tabs [role="tab"][aria-selected="true"]{ color:var(--ink); font-weight:700; background:var(--surface); border-bottom-color:var(--ink) }
+.article-content .sl .tabs [role="tab"]:focus-visible{ outline-offset:-2px }
+.article-content .sl [role="tabpanel"]:focus-visible{ outline-offset:6px }
 
 /* 步骤（真的有先后，所以编号） */
 .article-content .sl .steps{ list-style:none; margin:0; padding:1.6rem; display:grid; gap:0.88rem; counter-reset:s; border-top:1px solid var(--line) }
