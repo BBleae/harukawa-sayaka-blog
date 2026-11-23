@@ -66,6 +66,7 @@
 .article-content .sl .nav a:hover{ background:var(--surface-2); color:var(--ink) }
 
 .article-content .sl section{ padding-top:5.6rem; display:flex; flex-direction:column; gap:2rem; scroll-margin-top:4.8rem }
+.article-content .sl h3[id], .article-content .sl .row[id]{ scroll-margin-top:5.6rem }
 .article-content .sl .sec-head{ display:flex; flex-direction:column; gap:0.96rem }
 
 /* 状态记号：形状加文字，不靠颜色 */
